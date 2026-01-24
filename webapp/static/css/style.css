@@ -1,0 +1,23 @@
+.card-usina {
+    border: none;
+    border-radius: 15px;
+    color: white !important;
+    transition: transform 0.2s;
+}
+
+.card-usina:hover {
+    transform: translateY(-5px);
+}
+
+.online {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.offline {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+}
+
+.card-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}

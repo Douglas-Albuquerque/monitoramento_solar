@@ -1,0 +1,35 @@
+# Ambiente Python
+env/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Configurações sensíveis
+.env
+*.pkl
+cookies*.txt
+cookies*.json
+
+# Logs e debug
+webapp/logs/
+debug/
+*.log
+
+# IDE e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Arquivos temporários
+*.tmp
+*.bak
+*.old

@@ -1,0 +1,361 @@
+#!/usr/bin/env python3
+"""
+Robô Solar Dashboard - Coleta status das usinas e grava no MariaDB.
+"""
+
+import os
+import base64
+from datetime import datetime, timedelta
+
+from dotenv import load_dotenv
+import mysql.connector
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
+
+# ========== CONFIGURAÇÃO DAS USINAS ==========
+# Preencha com os dados reais (URL e seletores)
+USINAS = [
+    {
+        "nome": "UFV-ATLANTA",
+        "url_login": "http://server.growatt.com",  # URL de login
+        "usuario_env": "SITE1_USER",  # variável no .env
+        "senha_env": "SITE1_PASS",  # variável no .env
+        "user_sel": "input[name='username']",  # CSS selector campo usuário
+        "pass_sel": "input[name='password']",  # CSS selector campo senha
+        "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
+        "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
+        "online_texto": "connected",  # texto que indica ONLINE
+    },
+    {
+        "nome": "UFV CASA 4",
+        "url_dashboard": "https://home.solarmanpv.com/plant/infos/data",
+        "usa_cookies": True,
+        "cookie_file": "cookies_solarman.pkl",
+        "status_sel": "span.station-status",
+        "online_texto": "normal",
+    },
+    {
+        "nome": "UFV-HELENA-1",
+        "url_login": "http://server.growatt.com",  # URL de login
+        "usuario_env": "SITE3_USER",  # variável no .env
+        "senha_env": "SITE3_PASS",  # variável no .env
+        "user_sel": "input[name='username']",  # CSS selector campo usuário
+        "pass_sel": "input[name='password']",  # CSS selector campo senha
+        "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
+        "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
+        "online_texto": "connected",  # texto que indica ONLINE
+    },
+    {
+        "nome": "UFV HELENA-2",
+        "url_login": "https://web3.isolarcloud.com.hk/#/login",
+        "usuario_env": "SITE4_USER",
+        "senha_env": "SITE4_PASS",
+        "user_sel": "input[placeholder='Account']",
+        "pass_sel": "input[placeholder='Password']",
+        "btn_sel": "div.el-form-item__content button.el-button",
+        "status_sel": "div.isc-tag span.label",
+        "online_texto": "normal",
+    },
+]
+# =============================================
+
+
+def get_db_connection():
+    return mysql.connector.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "solar_user"),
+        password=os.getenv("DB_PASS"),
+        database=os.getenv("DB_NAME", "solar_monitor"),
+    )
+
+
+def salvar_status(nome_usina: str, status: str):
+    """Insere ou atualiza status da usina na tabela usinas_status."""
+    conn = get_db_connection()
+    cur = conn.cursor()
+    agora = datetime.now()
+
+    cur.execute(
+        """
+        INSERT INTO usinas_status (nome_usina, status, updated_at)
+        VALUES (%s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            status = VALUES(status),
+            updated_at = VALUES(updated_at)
+        """,
+        (nome_usina, status, agora),
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def criar_driver():
+    """Cria instância do Chrome headless."""
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    # usando chromedriver global instalado em /usr/local/bin
+    driver = webdriver.Chrome(options=options)
+    return driver
+
+
+def checar_usina(cfg: dict) -> str:
+    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""
+    driver = criar_driver()
+    status_final = "ERRO"
+
+    nome = cfg["nome"]
+    debug_dir = os.path.join(os.path.dirname(__file__), "..", "debug")
+    os.makedirs(debug_dir, exist_ok=True)
+
+    try:
+        print(f"[{nome}] 1. Acessando URL: {cfg['url_login']}")
+        driver.get(cfg["url_login"])
+
+        import time
+
+        print(f"[{nome}] 1.5. Aguardando SPA carregar...")
+        time.sleep(8)  # espera 8 segundos para o Vue/React renderizar
+
+        try:
+            print(f"[{nome}] 1.6. Fechando banner cookies...")
+            cookie_disagree = driver.find_element(
+                By.XPATH, "//button[contains(., 'I disagree')]"
+            )
+            cookie_disagree.click()
+            time.sleep(2)
+            print(f"[{nome}] 1.7. Cookies fechados")
+        except Exception:
+            print(f"[{nome}] 1.7. Sem banner cookies")
+        pass
+
+        driver.save_screenshot(f"{debug_dir}/{nome}_01_inicial.png")
+
+        wait = WebDriverWait(driver, 30)
+
+        # Campo usuário
+        print(f"[{nome}] 2. Procurando campo usuário: {cfg['user_sel']}")
+        el_user = wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, cfg["user_sel"]))
+        )
+        el_user.clear()
+        el_user.send_keys(os.getenv(cfg["usuario_env"]))
+        driver.save_screenshot(f"{debug_dir}/{nome}_02_usuario_preenchido.png")
+
+        # Campo senha
+        print(f"[{nome}] 3. Procurando campo senha: {cfg['pass_sel']}")
+        el_pass = driver.find_element(By.CSS_SELECTOR, cfg["pass_sel"])
+        el_pass.clear()
+        el_pass.send_keys(os.getenv(cfg["senha_env"]))
+        driver.save_screenshot(f"{debug_dir}/{nome}_03_senha_preenchida.png")
+
+        # Botão login
+        print(f"[{nome}] 4. Procurando botão: {cfg['btn_sel']}")
+        btn = driver.find_element(By.CSS_SELECTOR, cfg["btn_sel"])
+        driver.execute_script("arguments[0].scrollIntoView(true);", btn)
+        driver.save_screenshot(f"{debug_dir}/{nome}_04_antes_clicar.png")
+
+        try:
+            btn.click()
+        except Exception:
+            driver.execute_script("arguments[0].click();", btn)
+
+        print(f"[{nome}] 5. Login clicado, aguardando...")
+
+        import time
+
+        time.sleep(5)  # espera carregar
+        driver.save_screenshot(f"{debug_dir}/{nome}_05_apos_login.png")
+
+        # Esperar elemento de status aparecer
+        print(f"[{nome}] 6. Procurando status: {cfg['status_sel']}")
+        el_status = wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, cfg["status_sel"]))
+        )
+        driver.save_screenshot(f"{debug_dir}/{nome}_06_status_encontrado.png")
+
+        texto = (el_status.text or "").strip().lower()
+        print(f"[{nome}] 7. Texto lido: '{texto}'")
+
+        if cfg["online_texto"].lower() in texto:
+            status_final = "ONLINE"
+        else:
+            status_final = "OFFLINE"
+
+    except Exception as e:
+        print(f"[{nome}] ERRO DETALHADO: {type(e).__name__}: {str(e)}")
+        driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
+
+        # Salvar HTML para análise
+        with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
+            f.write(driver.page_source)
+
+        status_final = "ERRO"
+    finally:
+        driver.quit()
+
+    return status_final
+
+
+def checar_usina_cookies(cfg: dict) -> str:
+    """Usina que usa cookies (sem login)."""
+    import pickle
+    import time
+
+    driver = criar_driver()
+    status_final = "ERRO"
+    nome = cfg["nome"]
+    cookie_path = os.path.join(os.path.dirname(__file__), "..", cfg["cookie_file"])
+
+    try:
+        print(f"[{nome}] 1. Carregando cookies...")
+
+        if not os.path.exists(cookie_path):
+            print(f"[{nome}] ERRO: {cookie_path} não encontrado!")
+            return "ERRO"
+
+        # Acessar site primeiro (para definir domínio)
+        driver.get(cfg["url_dashboard"])
+        time.sleep(2)
+
+        # Carregar cookies
+        with open(cookie_path, "rb") as f:
+            cookies = pickle.load(f)
+
+        for cookie in cookies:
+            try:
+                driver.add_cookie(cookie)
+            except Exception:
+                pass  # Alguns cookies podem dar erro, ignora
+
+        print(f"[{nome}] 2. Cookies carregados, acessando dashboard...")
+        driver.refresh()
+        time.sleep(8)
+
+        # Procurar status
+        print(f"[{nome}] 3. Procurando status: {cfg['status_sel']}")
+        el_status = driver.find_element(By.CSS_SELECTOR, cfg["status_sel"])
+        texto = (el_status.text or "").strip().lower()
+        print(f"[{nome}] 4. Texto lido: '{texto}'")
+
+        if cfg["online_texto"].lower() in texto:
+            status_final = "ONLINE"
+        else:
+            status_final = "OFFLINE"
+
+    except Exception as e:
+        print(f"[{nome}] ERRO: {e}")
+        status_final = "ERRO"
+    finally:
+        driver.quit()
+
+    return status_final
+
+
+def verificar_expiracao_cookies(cookie_file: str, dias_aviso: int = 5) -> dict:
+    """
+    Verifica se cookies estão próximos de expirar.
+    Retorna: {"expira_em_dias": X, "precisa_renovar": True/False}
+    """
+    import pickle
+
+    cookie_path = os.path.join(os.path.dirname(__file__), "..", cookie_file)
+
+    if not os.path.exists(cookie_path):
+        return {
+            "expira_em_dias": 0,
+            "precisa_renovar": True,
+            "erro": "Arquivo não encontrado",
+        }
+
+    try:
+        with open(cookie_path, "rb") as f:
+            cookies = pickle.load(f)
+
+        # Procurar token JWT (geralmente tem "exp" nele)
+        for cookie in cookies:
+            if "value" in cookie and cookie["value"].startswith("eyJ"):
+                # É um JWT, decodificar
+                try:
+                    # JWT formato: header.payload.signature
+                    payload_b64 = cookie["value"].split(".")[1]
+                    # Adicionar padding se necessário
+                    payload_b64 += "=" * (4 - len(payload_b64) % 4)
+                    payload_json = base64.b64decode(payload_b64).decode("utf-8")
+                    payload = json.loads(payload_json)
+
+                    if "exp" in payload:
+                        exp_timestamp = payload["exp"]
+                        exp_date = datetime.fromtimestamp(exp_timestamp)
+                        agora = datetime.now()
+                        dias_restantes = (exp_date - agora).days
+
+                        return {
+                            "expira_em_dias": dias_restantes,
+                            "expira_em": exp_date.strftime("%d/%m/%Y %H:%M"),
+                            "precisa_renovar": dias_restantes <= dias_aviso,
+                        }
+                except Exception as e:
+                    continue
+
+        return {
+            "expira_em_dias": -1,
+            "precisa_renovar": False,
+            "erro": "Sem JWT nos cookies",
+        }
+
+    except Exception as e:
+        return {"expira_em_dias": 0, "precisa_renovar": True, "erro": str(e)}
+
+
+def main():
+    print("=== Iniciando coleta de status das usinas ===")
+
+    # Verificar cookies antes de começar
+    cookies_verificados = set()
+
+    for cfg in USINAS:
+        if cfg.get("usa_cookies") and cfg["cookie_file"] not in cookies_verificados:
+            cookies_verificados.add(cfg["cookie_file"])
+            info = verificar_expiracao_cookies(cfg["cookie_file"])
+
+            if info.get("precisa_renovar"):
+                dias = info.get("expira_em_dias", 0)
+                if dias > 0:
+                    print(
+                        f"\n⚠️  AVISO: Cookies de {cfg['nome']} expiram em {dias} dias ({info.get('expira_em')})"
+                    )
+                    print(
+                        f"    Renove antes de {info.get('expira_em')} para evitar falhas!\n"
+                    )
+                else:
+                    print(
+                        f"\n❌ URGENTE: Cookies de {cfg['nome']} expiraram ou estão inválidos!"
+                    )
+
+    # Coletar status normalmente
+    for cfg in USINAS:
+        print(f"-> Checando {cfg['nome']} ...")
+
+        if cfg.get("usa_cookies"):
+            status = checar_usina_cookies(cfg)
+        else:
+            status = checar_usina(cfg)
+
+        salvar_status(cfg["nome"], status)
+        print(f"   {cfg['nome']}: {status}")
+
+    print("=== Fim da coleta ===")
+
+
+if __name__ == "__main__":
+    main()
