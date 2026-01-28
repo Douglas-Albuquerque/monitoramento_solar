@@ -13,12 +13,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV_PATH = os.path.join(BASE_DIR, ".env")
 load_dotenv(ENV_PATH)
 
+USINA_URLS = {
+    "UFV CASA 4": "https://home.solarmanpv.com/plant/infos/data",
+    "UFV-ATLANTA": "http://server.growatt.com",
+    "UFV-HELENA-1": "http://server.growatt.com",
+    "UFV HELENA-2": "https://web3.isolarcloud.com.hk/#/plantList",
+}
+
 app = Flask(__name__)
 
 
 def verificar_expiracao_cookies_web():
     """Retorna info de expiração dos cookies do Solarman."""
-    cookie_path = os.path.join(BASE_DIR, "cookies_solarman.pkl")
+    cookie_path = os.path.join(BASE_DIR, "cookies", "cookies_solarman.pkl")
 
     if not os.path.exists(cookie_path):
         return None
@@ -60,7 +67,7 @@ def verificar_expiracao_cookies_web():
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "localhost"),
+        unix_socket="/var/run/mysqld/mysqld.sock",
         user=os.getenv("DB_USER", "solar_user"),
         password=os.getenv("DB_PASS"),
         database=os.getenv("DB_NAME", "solar_monitor"),
@@ -86,9 +93,12 @@ def get_status_usinas():
 @app.route("/")
 def dashboard():
     usinas = get_status_usinas()
+
     for u in usinas:
-        if isinstance(u.get("updated_at"), datetime):
-            continue
+        nome = u.get("nome_usina")
+        u["url_monitor"] = USINA_URLS.get(nome)
+        # if isinstance(u.get("updated_at"), datetime):
+        #    continue
 
     # Verificar cookies Solarman
     cookies_info = verificar_expiracao_cookies_web()

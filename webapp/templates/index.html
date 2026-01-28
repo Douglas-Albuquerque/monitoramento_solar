@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="refresh" content="120">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/solar.ico') }}">
 
     <style>
         body {
@@ -50,12 +51,44 @@
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
             transition: transform .2s ease, box-shadow .2s ease;
             min-height: 180px;
+            position: relative;
             /* ~3x o que era antes */
         }
 
         .card-usina:hover {
             transform: translateY(-6px);
             box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+        }
+
+        .btn-monitor-link {
+            position: absolute;
+            top: 12px;
+            /* ajuste vertical conforme o layout */
+            right: 16px;
+            /* encosta no lado direito do card */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            /* deixa redondo; remova se não quiser */
+            background-color: #ffffff33;
+            /* cor de fundo (semi-transparente) */
+            border: 1px solid #ffffff66;
+            /* opcional */
+            color: #fff;
+            /* cor do ícone */
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-monitor-link:hover {
+            background-color: #ffffff66;
+            /* cor de hover */
+            transform: scale(1.05);
         }
 
         .online {
@@ -188,6 +221,7 @@
             <div class="col-12 col-md-6">
                 <div class="card-usina {{ cls }}">
                     <h4 class="mb-3">{{ u.nome_usina }}</h4>
+
                     <p class="status-text mb-2">
                         {% if u.status == 'ONLINE' %}
                         🟢 Online
@@ -197,10 +231,22 @@
                         ⚠️ Erro
                         {% endif %}
                     </p>
-                    <small class="d-block">
+
+                    <small class="d-block mb-3">
                         Última atualização:<br>
                         {{ u.updated_at.strftime('%d/%m/%Y %H:%M:%S') if u.updated_at }}
                     </small>
+
+                    {% if u.url_monitor %}
+                    <a href="{{ u.url_monitor }}" target="_blank" class="btn-monitor-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-link" viewBox="0 0 16 16">
+                            <path
+                                d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+                            <path
+                                d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
+                    </a>
+                    {% endif %}
                 </div>
             </div>
             {% else %}
@@ -211,6 +257,7 @@
             </div>
             {% endfor %}
         </div>
+
 
         <!-- Badge de cookies -->
         {% if cookies_info %}

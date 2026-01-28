@@ -6,11 +6,16 @@ Robô Solar Dashboard - Coleta status das usinas e grava no MariaDB.
 import os
 import base64
 from datetime import datetime, timedelta
+import json
 
 from dotenv import load_dotenv
 import mysql.connector
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import (
+    TimeoutException,
+    NoSuchElementException,
+)  # [file:20]
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -35,7 +40,7 @@ USINAS = [
         "nome": "UFV CASA 4",
         "url_dashboard": "https://home.solarmanpv.com/plant/infos/data",
         "usa_cookies": True,
-        "cookie_file": "cookies_solarman.pkl",
+        "cookie_file": "cookies/cookies_solarman.pkl",
         "status_sel": "span.station-status",
         "online_texto": "normal",
     },
@@ -58,8 +63,8 @@ USINAS = [
         "user_sel": "input[placeholder='Account']",
         "pass_sel": "input[placeholder='Password']",
         "btn_sel": "div.el-form-item__content button.el-button",
-        "status_sel": "div.isc-tag span.label",
-        "online_texto": "normal",
+        "status_sel": "td.el-table_1_column_4.plant-list-cell.el-table__cell div.plant-status-column",
+        "online_texto": "Normal",
     },
 ]
 # =============================================
@@ -67,7 +72,7 @@ USINAS = [
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "localhost"),
+        unix_socket="/var/run/mysqld/mysqld.sock",
         user=os.getenv("DB_USER", "solar_user"),
         password=os.getenv("DB_PASS"),
         database=os.getenv("DB_NAME", "solar_monitor"),
@@ -109,7 +114,7 @@ def criar_driver():
 
 
 def checar_usina(cfg: dict) -> str:
-    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""
+    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""  # [file:20]
     driver = criar_driver()
     status_final = "ERRO"
 
@@ -136,7 +141,7 @@ def checar_usina(cfg: dict) -> str:
             print(f"[{nome}] 1.7. Cookies fechados")
         except Exception:
             print(f"[{nome}] 1.7. Sem banner cookies")
-        pass
+            pass
 
         driver.save_screenshot(f"{debug_dir}/{nome}_01_inicial.png")
 
@@ -170,22 +175,37 @@ def checar_usina(cfg: dict) -> str:
             driver.execute_script("arguments[0].click();", btn)
 
         print(f"[{nome}] 5. Login clicado, aguardando...")
-
-        import time
-
         time.sleep(5)  # espera carregar
         driver.save_screenshot(f"{debug_dir}/{nome}_05_apos_login.png")
 
         # Esperar elemento de status aparecer
         print(f"[{nome}] 6. Procurando status: {cfg['status_sel']}")
-        el_status = wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, cfg["status_sel"]))
-        )
+
+        try:
+            # 1ª tentativa: seletor CSS configurado (ex.: span.green)
+            el_status = wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, cfg["status_sel"]))
+            )
+        except TimeoutException:
+            # 2ª tentativa (Growatt): célula que contém "Connection Status"
+            print(
+                f"[{nome}] 6b. Não achei '{cfg['status_sel']}', tentando XPath do texto..."
+            )
+            el_status = wait.until(
+                EC.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//td[contains(normalize-space(.), 'Connection Status')]//span/span",
+                    )
+                )
+            )
+
         driver.save_screenshot(f"{debug_dir}/{nome}_06_status_encontrado.png")
 
         texto = (el_status.text or "").strip().lower()
         print(f"[{nome}] 7. Texto lido: '{texto}'")
 
+        # para Growatt e demais: só "connected" é ONLINE; qualquer outro texto => OFFLINE
         if cfg["online_texto"].lower() in texto:
             status_final = "ONLINE"
         else:
@@ -208,12 +228,12 @@ def checar_usina(cfg: dict) -> str:
 
 def checar_usina_cookies(cfg: dict) -> str:
     """Usina que usa cookies (sem login)."""
-    import pickle
-    import time
+    import pickle, json, time
 
     driver = criar_driver()
     status_final = "ERRO"
     nome = cfg["nome"]
+
     cookie_path = os.path.join(os.path.dirname(__file__), "..", cfg["cookie_file"])
 
     try:
@@ -223,25 +243,29 @@ def checar_usina_cookies(cfg: dict) -> str:
             print(f"[{nome}] ERRO: {cookie_path} não encontrado!")
             return "ERRO"
 
-        # Acessar site primeiro (para definir domínio)
         driver.get(cfg["url_dashboard"])
         time.sleep(2)
 
-        # Carregar cookies
-        with open(cookie_path, "rb") as f:
-            cookies = pickle.load(f)
+        # Detecta pelo sufixo se é pickle (.pkl) ou json
+        if cfg["cookie_file"].endswith(".pkl"):
+            with open(cookie_path, "rb") as f:
+                cookies = pickle.load(f)
+        else:
+            with open(cookie_path, "r", encoding="utf-8") as f:
+                cookies = json.load(f)
 
         for cookie in cookies:
             try:
-                driver.add_cookie(cookie)
+                c = cookie.copy()
+                c.pop("sameSite", None)
+                driver.add_cookie(c)
             except Exception:
-                pass  # Alguns cookies podem dar erro, ignora
+                pass
 
         print(f"[{nome}] 2. Cookies carregados, acessando dashboard...")
         driver.refresh()
         time.sleep(8)
 
-        # Procurar status
         print(f"[{nome}] 3. Procurando status: {cfg['status_sel']}")
         el_status = driver.find_element(By.CSS_SELECTOR, cfg["status_sel"])
         texto = (el_status.text or "").strip().lower()
@@ -249,8 +273,10 @@ def checar_usina_cookies(cfg: dict) -> str:
 
         if cfg["online_texto"].lower() in texto:
             status_final = "ONLINE"
-        else:
+        elif "offline" in texto or "desligado" in texto:
             status_final = "OFFLINE"
+        else:
+            status_final = "ERRO"
 
     except Exception as e:
         print(f"[{nome}] ERRO: {e}")
