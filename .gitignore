@@ -1,11 +1,17 @@
 # Ambiente Python
 venv/
-env/venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
+venv/
+env/
+ENV/
+.venv/
+.env
+__pycache__/
+*.pyc
 
 # Configurações sensíveis
 .env
