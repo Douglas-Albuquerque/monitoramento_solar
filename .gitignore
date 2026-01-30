@@ -1,4 +1,5 @@
 # Ambiente Python
+venv/
 env/venv/
 __pycache__/
 *.pyc

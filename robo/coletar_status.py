@@ -7,10 +7,13 @@ import os
 import base64
 from datetime import datetime, timedelta
 import json
+import requests
 
 from dotenv import load_dotenv
 import mysql.connector
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import (
     TimeoutException,
@@ -27,6 +30,7 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 USINAS = [
     {
         "nome": "UFV-ATLANTA",
+        "responsavel": "Edson - 85988066711",
         "url_login": "http://server.growatt.com",  # URL de login
         "usuario_env": "SITE1_USER",  # variável no .env
         "senha_env": "SITE1_PASS",  # variável no .env
@@ -38,33 +42,36 @@ USINAS = [
     },
     {
         "nome": "UFV CASA 4",
+        "responsavel": "Elizaldo - 85988858352",
         "url_dashboard": "https://home.solarmanpv.com/plant/infos/data",
         "usa_cookies": True,
         "cookie_file": "cookies/cookies_solarman.pkl",
         "status_sel": "span.station-status",
         "online_texto": "normal",
     },
-    {
-        "nome": "UFV-HELENA-1",
-        "url_login": "http://server.growatt.com",  # URL de login
-        "usuario_env": "SITE3_USER",  # variável no .env
-        "senha_env": "SITE3_PASS",  # variável no .env
-        "user_sel": "input[name='username']",  # CSS selector campo usuário
-        "pass_sel": "input[name='password']",  # CSS selector campo senha
-        "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
-        "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
-        "online_texto": "connected",  # texto que indica ONLINE
-    },
+    # {
+    #     "nome": "UFV-HELENA-1",
+    #     "responsavel": "Elizaldo - 85988858352",
+    #     "url_login": "http://server.growatt.com",  # URL de login
+    #     "usuario_env": "SITE3_USER",  # variável no .env
+    #     "senha_env": "SITE3_PASS",  # variável no .env
+    #     "user_sel": "input[name='username']",  # CSS selector campo usuário
+    #     "pass_sel": "input[name='password']",  # CSS selector campo senha
+    #     "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
+    #     "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
+    #     "online_texto": "connected",  # texto que indica ONLINE
+    # },
     {
         "nome": "UFV HELENA-2",
+        "responsavel": "Edson - 85988066711",
         "url_login": "https://web3.isolarcloud.com.hk/#/login",
         "usuario_env": "SITE4_USER",
         "senha_env": "SITE4_PASS",
         "user_sel": "input[placeholder='Account']",
         "pass_sel": "input[placeholder='Password']",
         "btn_sel": "div.el-form-item__content button.el-button",
-        "status_sel": "td.el-table_1_column_4.plant-list-cell.el-table__cell div.plant-status-column",
-        "online_texto": "Normal",
+        "status_sel": "td.el-table_1_column_4.plant-list-cell.el-table__cell div.plant-status-column",  # "td.el-table_1_column_4.plant-list-cell.el-table__cell div.plant-status-column"
+        "online_texto": "Normal",  # padrão de online é "Normal"
     },
 ]
 # =============================================
@@ -77,6 +84,24 @@ def get_db_connection():
         password=os.getenv("DB_PASS"),
         database=os.getenv("DB_NAME", "solar_monitor"),
     )
+
+
+def obter_status_anterior(nome_usina: str) -> str:
+    """Busca o último status salvo para a usina (ou None)."""
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT status
+        FROM usinas_status
+        WHERE nome_usina = %s
+        """,
+        (nome_usina,),
+    )
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    return row[0] if row else None
 
 
 def salvar_status(nome_usina: str, status: str):
@@ -101,20 +126,66 @@ def salvar_status(nome_usina: str, status: str):
     conn.close()
 
 
+def enviar_whatsapp_alerta(
+    nome_usina: str, status_novo: str, status_antigo: str = None, responsavel: str = ""
+):
+    base_url = os.getenv("EVOLUTION_BASE_URL", "http://10.254.2.210:5080")
+    instance = os.getenv("EVOLUTION_INSTANCE", "Solar")
+    api_key = os.getenv("EVOLUTION_API_KEY", "F0R$@tl1")
+    numero = os.getenv("WHATSAPP_NUMBER_ALERTA", "5585981699862")
+
+    url = f"{base_url}/message/sendText/{instance}"
+
+    texto = (
+        "ALERTA MONITORAMENTO SOLAR\n\n"
+        f"Usina: {nome_usina}\n"
+        f"Status atual: {status_novo}\n"
+        # f"Status anterior: {status_antigo or 'desconhecido'}\n"
+        f"Responsável técnico: {responsavel or 'não cadastrado'}\n"
+        f"Data/hora: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
+    )
+
+    payload = {
+        "number": numero,
+        "text": texto,
+        "options": {
+            "delay": 1200,
+            "presence": "composing",
+            "linkPreview": False,
+        },
+    }
+
+    headers = {
+        "apikey": api_key,
+        "Content-Type": "application/json",
+    }
+
+    try:
+        resp = requests.post(url, headers=headers, json=payload, timeout=15)
+        print(f"[WHATSAPP] HTTP {resp.status_code} - {resp.text}")
+    except Exception as e:
+        print(f"[WHATSAPP] Erro ao enviar alerta: {e}")
+
+
 def criar_driver():
-    """Cria instância do Chrome headless."""
     options = Options()
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
-    # usando chromedriver global instalado em /usr/local/bin
-    driver = webdriver.Chrome(options=options)
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--remote-debugging-port=9222")
+
+    # usa o Chrome que você acabou de instalar:
+    options.binary_location = "/usr/bin/google-chrome"
+
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
     return driver
 
 
 def checar_usina(cfg: dict) -> str:
-    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""  # [file:20]
+    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""
     driver = criar_driver()
     status_final = "ERRO"
 
@@ -213,15 +284,19 @@ def checar_usina(cfg: dict) -> str:
 
     except Exception as e:
         print(f"[{nome}] ERRO DETALHADO: {type(e).__name__}: {str(e)}")
-        driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
-
-        # Salvar HTML para análise
-        with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
-            f.write(driver.page_source)
-
+        try:
+            driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
+            # Salvar HTML para análise
+            with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
+                f.write(driver.page_source)
+        except Exception as e2:
+            print(f"[{nome}] Falha ao capturar screenshot/HTML de erro: {e2}")
         status_final = "ERRO"
     finally:
-        driver.quit()
+        try:
+            driver.quit()
+        except Exception:
+            pass
 
     return status_final
 
@@ -370,17 +445,25 @@ def main():
 
     # Coletar status normalmente
     for cfg in USINAS:
-        print(f"-> Checando {cfg['nome']} ...")
+        nome = cfg["nome"]
+        responsavel = cfg.get("responsavel", "")
+        print(f"-> Checando {nome} ...")
 
         if cfg.get("usa_cookies"):
-            status = checar_usina_cookies(cfg)
+            status_novo = checar_usina_cookies(cfg)
         else:
-            status = checar_usina(cfg)
+            status_novo = checar_usina(cfg)
 
-        salvar_status(cfg["nome"], status)
-        print(f"   {cfg['nome']}: {status}")
+        status_antigo = obter_status_anterior(nome)
+        salvar_status(nome, status_novo)
+        print(f"   {nome}: {status_novo} (antes: {status_antigo})")
 
-    print("=== Fim da coleta ===")
+        # Regra: OFFLINE ou ERRO
+        if status_novo in ("OFFLINE", "ERRO"):
+            print(
+                f"[ALERTA] {nome} em estado crítico ({status_antigo} -> {status_novo}). Enviando WhatsApp..."
+            )
+            enviar_whatsapp_alerta(nome, status_novo, status_antigo, responsavel)
 
 
 if __name__ == "__main__":
