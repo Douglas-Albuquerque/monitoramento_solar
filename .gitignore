@@ -1,14 +1,14 @@
 # Ambiente Python
-venv/
+venv/*
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-venv/
+venv/*
 env/
 ENV/
-.venv/
+.venv/*
 .env
 __pycache__/
 *.pyc
