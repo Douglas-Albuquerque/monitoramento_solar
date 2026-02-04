@@ -12,7 +12,10 @@ ENV/
 .env
 __pycache__/
 *.pyc
-
+venv/
+.venv/
+env/
+.env/
 # Configurações sensíveis
 .env
 *.pkl
