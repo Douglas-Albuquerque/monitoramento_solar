@@ -185,7 +185,7 @@ def criar_driver():
 
 
 def checar_usina(cfg: dict) -> str:
-    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""  # [file:20]
+    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""
     driver = criar_driver()
     status_final = "ERRO"
 
@@ -284,15 +284,19 @@ def checar_usina(cfg: dict) -> str:
 
     except Exception as e:
         print(f"[{nome}] ERRO DETALHADO: {type(e).__name__}: {str(e)}")
-        driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
-
-        # Salvar HTML para análise
-        with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
-            f.write(driver.page_source)
-
+        try:
+            driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
+            # Salvar HTML para análise
+            with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
+                f.write(driver.page_source)
+        except Exception as e2:
+            print(f"[{nome}] Falha ao capturar screenshot/HTML de erro: {e2}")
         status_final = "ERRO"
     finally:
-        driver.quit()
+        try:
+            driver.quit()
+        except Exception:
+            pass
 
     return status_final
 
@@ -451,13 +455,15 @@ def main():
             status_novo = checar_usina(cfg)
 
         status_antigo = obter_status_anterior(nome)
+
+        # grava no banco SEM depender da regra de alerta
         salvar_status(nome, status_novo)
         print(f"   {nome}: {status_novo} (antes: {status_antigo})")
 
-        # Regra: OFFLINE ou ERRO
-        if status_novo in ("OFFLINE", "ERRO"):
+        # dispara alerta só na MUDANÇA de ONLINE -> OFFLINE ou ONLINE -> ERRO
+        if status_antigo == "ONLINE" and status_novo in ("OFFLINE", "ERRO"):
             print(
-                f"[ALERTA] {nome} em estado crítico ({status_antigo} -> {status_novo}). Enviando WhatsApp..."
+                f"[ALERTA] {nome} mudou de {status_antigo} para {status_novo}. Enviando WhatsApp..."
             )
             enviar_whatsapp_alerta(nome, status_novo, status_antigo, responsavel)
 

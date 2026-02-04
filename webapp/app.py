@@ -94,12 +94,33 @@ def get_status_usinas():
 def dashboard():
     usinas = get_status_usinas()
 
+    info_extra = {
+        "UFV-ATLANTA": {
+            "descricao": "Atlanta SEDE",
+            "maps_url": os.getenv("MAPS_UFV_ATLANTA", ""),
+        },
+        "UFV CASA 4": {
+            "descricao": "Casa Mardonio",
+            "maps_url": os.getenv("MAPS_UFV_CASA4", ""),
+        },
+        "UFV-HELENA-1": {
+            "descricao": "Lado Casa Mardonio",
+            "maps_url": os.getenv("MAPS_UFV_HELENA1", ""),
+        },
+        "UFV HELENA-2": {
+            "descricao": "Galpões",
+            "maps_url": os.getenv("MAPS_UFV_HELENA2", ""),
+        },
+    }
+
     for u in usinas:
         nome = u.get("nome_usina")
         u["url_monitor"] = USINA_URLS.get(nome)
         # if isinstance(u.get("updated_at"), datetime):
         #    continue
-
+        extra = info_extra.get(nome, {})
+        u["descricao"] = extra.get("descricao", "")
+        u["maps_url"] = extra.get("maps_url", "")
     # Verificar cookies Solarman
     cookies_info = verificar_expiracao_cookies_web()
 

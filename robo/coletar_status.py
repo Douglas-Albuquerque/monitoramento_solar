@@ -6,6 +6,7 @@ Robô Solar Dashboard - Coleta status das usinas e grava no MariaDB.
 import os
 import base64
 from datetime import datetime, timedelta
+from requests.exceptions import HTTPError
 import json
 import requests
 
@@ -31,15 +32,23 @@ USINAS = [
     {
         "nome": "UFV-ATLANTA",
         "responsavel": "Edson - 85988066711",
-        "url_login": "http://server.growatt.com",  # URL de login
-        "usuario_env": "SITE1_USER",  # variável no .env
-        "senha_env": "SITE1_PASS",  # variável no .env
-        "user_sel": "input[name='username']",  # CSS selector campo usuário
-        "pass_sel": "input[name='password']",  # CSS selector campo senha
-        "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
-        "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
-        "online_texto": "connected",  # texto que indica ONLINE
+        "tipo": "growatt_api",
+        "plant_id": 310511,  # plant_id que você recebeu da API
+        "token_env": "GROWATT_TOKEN_ATLANTA",
+        "limite_kw_online": 0.1,  # >0.1 kW consideramos ONLINE
     },
+    # {
+    #     "nome": "UFV-ATLANTA",
+    #     "responsavel": "Edson - 85988066711",
+    #     "url_login": "http://server.growatt.com",  # URL de login
+    #     "usuario_env": "SITE1_USER",  # variável no .env
+    #     "senha_env": "SITE1_PASS",  # variável no .env
+    #     "user_sel": "input[name='username']",  # CSS selector campo usuário
+    #     "pass_sel": "input[name='password']",  # CSS selector campo senha
+    #     "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
+    #     "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
+    #     "online_texto": "connected",  # texto que indica ONLINE
+    # },
     {
         "nome": "UFV CASA 4",
         "responsavel": "Elizaldo - 85988858352",
@@ -48,6 +57,14 @@ USINAS = [
         "cookie_file": "cookies/cookies_solarman.pkl",
         "status_sel": "span.station-status",
         "online_texto": "normal",
+    },
+    {
+        "nome": "UFV-HELENA-1",
+        "responsavel": "Edson - 85988066711",
+        "tipo": "growatt_api",
+        "plant_id": 2480414,
+        "token_env": "GROWATT_TOKEN_HELENA1",
+        "limite_kw_online": 0.1,
     },
     # {
     #     "nome": "UFV-HELENA-1",
@@ -126,6 +143,106 @@ def salvar_status(nome_usina: str, status: str):
     conn.close()
 
 
+GROWATT_API_BASE = "https://openapi.growatt.com/v1"
+
+
+def get_growatt_headers(cfg: dict):
+    token_env = cfg.get("token_env")
+    if not token_env:
+        raise RuntimeError(f"token_env não definido para {cfg['nome']}")
+    token = os.getenv(token_env)
+    if not token:
+        raise RuntimeError(f"Variável {token_env} não encontrada no .env")
+    return {"token": token}
+
+
+def checar_usina_growatt_api(cfg: dict) -> str:
+    nome = cfg["nome"]
+    plant_id = cfg["plant_id"]
+    limite_kw = cfg.get("limite_kw_online", 0.1)
+    # janelas de tempo (ajuste se quiser)
+    limite_minutos_offline = 30  # se atualização for >30 min, consideramos ERRO
+
+    try:
+        url = f"{GROWATT_API_BASE}/plant/data"
+        params = {"plant_id": plant_id}
+        resp = requests.get(
+            url,
+            headers=get_growatt_headers(cfg),
+            params=params,
+            timeout=15,
+        )
+        try:
+            resp.raise_for_status()
+        except HTTPError as http_err:
+            status_code = resp.status_code
+            print(f"[{nome}] HTTP ERRO API Growatt ({status_code}): {http_err}")
+            if 500 <= status_code < 600:
+                status_antigo = obter_status_anterior(nome)
+                print(
+                    f"[{nome}] Mantendo status anterior devido a erro 5xx: {status_antigo}"
+                )
+                return status_antigo or "ERRO"
+            return "ERRO"
+
+        payload = resp.json()
+        if payload.get("error_code") != 0:
+            err = payload.get("error_msg")
+            print(f"[{nome}] ERRO API: {err}")
+            if err == "error_frequently_access":
+                status_antigo = obter_status_anterior(nome)
+                print(
+                    f"[{nome}] Mantendo status anterior devido a rate limit: {status_antigo}"
+                )
+                return status_antigo or "ERRO"
+            return "ERRO"
+
+        data = payload.get("data", {}) or {}
+        current_power = float(data.get("current_power", 0) or 0)
+        last_update_raw = (data.get("last_update_time") or "").strip()
+
+        print(
+            f"[{nome}] current_power = {current_power} kW, "
+            f"last_update_time = {last_update_raw}"
+        )
+
+        # 1) Se potência > limite, ONLINE
+        if current_power > limite_kw:
+            return "ONLINE"
+
+        # 2) Se potência 0 (ou muito baixa), usamos só o tempo da última atualização
+        minutos_diferenca = None
+        if last_update_raw:
+            try:
+                # formato: "2026-02-03 13:39:23"
+                dt_local = datetime.strptime(last_update_raw, "%Y-%m-%d %H:%M:%S")
+                # API indica timezone "GMT-3", você está em -3, então podemos tratar como local
+                dt_local = dt_local.replace(tzinfo=timezone(timedelta(hours=-3)))
+                agora_local = datetime.now(timezone(timedelta(hours=-3)))
+                minutos_diferenca = (agora_local - dt_local).total_seconds() / 60.0
+            except Exception as e:
+                print(f"[{nome}] ERRO ao parsear last_update_time: {e}")
+                minutos_diferenca = None
+
+        # Se temos last_update_time e é “recente”: OFFLINE (sem geração, mas conexão ok)
+        if (
+            minutos_diferenca is not None
+            and minutos_diferenca <= limite_minutos_offline
+        ):
+            return "OFFLINE"
+
+        # Se faz muito tempo que não atualiza, consideramos ERRO
+        if minutos_diferenca is not None and minutos_diferenca > limite_minutos_offline:
+            return "ERRO"
+
+        # Se não conseguimos calcular diferença de tempo, cai como ERRO por segurança
+        return "ERRO"
+
+    except Exception as e:
+        print(f"[{nome}] ERRO API Growatt: {e}")
+        return "ERRO"
+
+
 def enviar_whatsapp_alerta(
     nome_usina: str, status_novo: str, status_antigo: str = None, responsavel: str = ""
 ):
@@ -185,7 +302,7 @@ def criar_driver():
 
 
 def checar_usina(cfg: dict) -> str:
-    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""
+    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""  # [file:20]
     driver = criar_driver()
     status_final = "ERRO"
 
@@ -284,19 +401,15 @@ def checar_usina(cfg: dict) -> str:
 
     except Exception as e:
         print(f"[{nome}] ERRO DETALHADO: {type(e).__name__}: {str(e)}")
-        try:
-            driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
-            # Salvar HTML para análise
-            with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
-                f.write(driver.page_source)
-        except Exception as e2:
-            print(f"[{nome}] Falha ao capturar screenshot/HTML de erro: {e2}")
+        driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
+
+        # Salvar HTML para análise
+        with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
+            f.write(driver.page_source)
+
         status_final = "ERRO"
     finally:
-        try:
-            driver.quit()
-        except Exception:
-            pass
+        driver.quit()
 
     return status_final
 
@@ -449,7 +562,9 @@ def main():
         responsavel = cfg.get("responsavel", "")
         print(f"-> Checando {nome} ...")
 
-        if cfg.get("usa_cookies"):
+        if cfg.get("tipo") == "growatt_api":
+            status_novo = checar_usina_growatt_api(cfg)
+        elif cfg.get("usa_cookies"):
             status_novo = checar_usina_cookies(cfg)
         else:
             status_novo = checar_usina(cfg)
@@ -458,8 +573,8 @@ def main():
         salvar_status(nome, status_novo)
         print(f"   {nome}: {status_novo} (antes: {status_antigo})")
 
-        # Regra: OFFLINE ou ERRO
-        if status_novo in ("OFFLINE", "ERRO"):
+        # Enviar alerta **apenas quando houver mudança** para estado crítico
+        if status_novo in ("OFFLINE", "ERRO") and status_novo != status_antigo:
             print(
                 f"[ALERTA] {nome} em estado crítico ({status_antigo} -> {status_novo}). Enviando WhatsApp..."
             )

@@ -49,18 +49,18 @@ USINAS = [
         "status_sel": "span.station-status",
         "online_texto": "normal",
     },
-    # {
-    #     "nome": "UFV-HELENA-1",
-    #     "responsavel": "Elizaldo - 85988858352",
-    #     "url_login": "http://server.growatt.com",  # URL de login
-    #     "usuario_env": "SITE3_USER",  # variável no .env
-    #     "senha_env": "SITE3_PASS",  # variável no .env
-    #     "user_sel": "input[name='username']",  # CSS selector campo usuário
-    #     "pass_sel": "input[name='password']",  # CSS selector campo senha
-    #     "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
-    #     "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
-    #     "online_texto": "connected",  # texto que indica ONLINE
-    # },
+    {
+        "nome": "UFV-HELENA-1",
+        "responsavel": "Elizaldo - 85988858352",
+        "url_login": "http://server.growatt.com",  # URL de login
+        "usuario_env": "SITE3_USER",  # variável no .env
+        "senha_env": "SITE3_PASS",  # variável no .env
+        "user_sel": "input[name='username']",  # CSS selector campo usuário
+        "pass_sel": "input[name='password']",  # CSS selector campo senha
+        "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
+        "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
+        "online_texto": "connected",  # texto que indica ONLINE
+    },
     {
         "nome": "UFV HELENA-2",
         "responsavel": "Edson - 85988066711",
@@ -185,7 +185,7 @@ def criar_driver():
 
 
 def checar_usina(cfg: dict) -> str:
-    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""  # [file:20]
+    """Faz login em uma usina e detecta se está ONLINE ou OFFLINE."""
     driver = criar_driver()
     status_final = "ERRO"
 
@@ -284,15 +284,19 @@ def checar_usina(cfg: dict) -> str:
 
     except Exception as e:
         print(f"[{nome}] ERRO DETALHADO: {type(e).__name__}: {str(e)}")
-        driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
-
-        # Salvar HTML para análise
-        with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
-            f.write(driver.page_source)
-
+        try:
+            driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
+            # Salvar HTML para análise
+            with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
+                f.write(driver.page_source)
+        except Exception as e2:
+            print(f"[{nome}] Falha ao capturar screenshot/HTML de erro: {e2}")
         status_final = "ERRO"
     finally:
-        driver.quit()
+        try:
+            driver.quit()
+        except Exception:
+            pass
 
     return status_final
 
