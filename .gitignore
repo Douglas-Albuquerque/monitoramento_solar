@@ -41,3 +41,5 @@ ehthumbs.db
 *.tmp
 *.bak
 *.old
+robo/google-chrome-stable_current_amd64.deb
+*.deb
