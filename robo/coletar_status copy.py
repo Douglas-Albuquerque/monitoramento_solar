@@ -2,12 +2,14 @@
 """
 Robô Solar Dashboard - Coleta status das usinas e grava no MariaDB.
 """
-
 import os
 import base64
-from datetime import datetime, timedelta
 import json
 import requests
+import logging
+from logging.handlers import RotatingFileHandler
+from requests.exceptions import HTTPError
+from datetime import datetime, timedelta, timezone
 
 from dotenv import load_dotenv
 import mysql.connector
@@ -25,20 +27,51 @@ from selenium.webdriver.support import expected_conditions as EC
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 
+# Diretório e arquivo de log
+LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOG_DIR, "robo_status.log")
+
+# Configuração básica de logging
+logger = logging.getLogger("robo_solar")
+logger.setLevel(logging.INFO)
+
+# Evitar handlers duplicados
+if not logger.handlers:
+    # Log em arquivo com rotação
+    file_handler = RotatingFileHandler(
+        LOG_FILE, maxBytes=1_000_000, backupCount=5, encoding="utf-8"
+    )
+    formatter = logging.Formatter(
+        "%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    # Log no console (terminal)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
 # ========== CONFIGURAÇÃO DAS USINAS ==========
-# Preencha com os dados reais (URL e seletores)
 USINAS = [
     {
         "nome": "UFV-ATLANTA",
         "responsavel": "Edson - 85988066711",
-        "url_login": "http://server.growatt.com",  # URL de login
-        "usuario_env": "SITE1_USER",  # variável no .env
-        "senha_env": "SITE1_PASS",  # variável no .env
-        "user_sel": "input[name='username']",  # CSS selector campo usuário
-        "pass_sel": "input[name='password']",  # CSS selector campo senha
-        "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
-        "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
-        "online_texto": "connected",  # texto que indica ONLINE
+        "tipo": "growatt_api",
+        "plant_id": 310511,  # plant_id da API
+        "token_env": "GROWATT_TOKEN_ATLANTA",
+        "limite_kw_online": 0.1,  # >0.1 kW consideramos ONLINE
+        # dados para fallback via Selenium:
+        "url_login": "http://server.growatt.com",
+        "usuario_env": "SITE1_USER",
+        "senha_env": "SITE1_PASS",
+        "user_sel": "input[name='username']",
+        "pass_sel": "input[name='password']",
+        "btn_sel": "button.hasColorBtn.loginB",
+        "status_sel": "span.green",
+        "online_texto": "connected",
     },
     {
         "nome": "UFV CASA 4",
@@ -49,18 +82,23 @@ USINAS = [
         "status_sel": "span.station-status",
         "online_texto": "normal",
     },
-    # {
-    #     "nome": "UFV-HELENA-1",
-    #     "responsavel": "Elizaldo - 85988858352",
-    #     "url_login": "http://server.growatt.com",  # URL de login
-    #     "usuario_env": "SITE3_USER",  # variável no .env
-    #     "senha_env": "SITE3_PASS",  # variável no .env
-    #     "user_sel": "input[name='username']",  # CSS selector campo usuário
-    #     "pass_sel": "input[name='password']",  # CSS selector campo senha
-    #     "btn_sel": "button.hasColorBtn.loginB",  # CSS selector botão login
-    #     "status_sel": "span.green",  # CSS selector onde aparece Online/Offline
-    #     "online_texto": "connected",  # texto que indica ONLINE
-    # },
+    {
+        "nome": "UFV-HELENA-1",
+        "responsavel": "Elizaldo - 85988858352",
+        "tipo": "growatt_api",
+        "plant_id": 2480414,
+        "token_env": "GROWATT_TOKEN_HELENA1",
+        "limite_kw_online": 0.1,
+        # dados para fallback via Selenium:
+        # "url_login": "http://server.growatt.com",
+        # "usuario_env": "SITE3_USER",
+        # "senha_env": "SITE3_PASS",
+        # "user_sel": "input[name='username']",
+        # "pass_sel": "input[name='password']",
+        # "btn_sel": "button.hasColorBtn.loginB",
+        # "status_sel": "span.green",
+        # "online_texto": "connected",
+    },
     {
         "nome": "UFV HELENA-2",
         "responsavel": "Edson - 85988066711",
@@ -70,8 +108,8 @@ USINAS = [
         "user_sel": "input[placeholder='Account']",
         "pass_sel": "input[placeholder='Password']",
         "btn_sel": "div.el-form-item__content button.el-button",
-        "status_sel": "td.el-table_1_column_4.plant-list-cell.el-table__cell div.plant-status-column",  # "td.el-table_1_column_4.plant-list-cell.el-table__cell div.plant-status-column"
-        "online_texto": "Normal",  # padrão de online é "Normal"
+        "status_sel": "td.el-table_1_column_4.plant-list-cell.el-table__cell div.plant-status-column",
+        "online_texto": "Normal",
     },
 ]
 # =============================================
@@ -126,6 +164,142 @@ def salvar_status(nome_usina: str, status: str):
     conn.close()
 
 
+GROWATT_API_BASE = "https://openapi.growatt.com/v1"
+
+
+def get_growatt_headers(cfg: dict):
+    token_env = cfg.get("token_env")
+    if not token_env:
+        raise RuntimeError(f"token_env não definido para {cfg['nome']}")
+    token = os.getenv(token_env)
+    if not token:
+        raise RuntimeError(f"Variável {token_env} não encontrada no .env")
+    return {"token": token}
+
+
+def checar_usina_growatt_api(cfg: dict) -> str:
+    nome = cfg["nome"]
+    plant_id = cfg["plant_id"]
+    limite_kw = cfg.get("limite_kw_online", 0.1)
+
+    limite_minutos_offline = 10
+    limite_minutos_erro = 30
+
+    try:
+        url = f"{GROWATT_API_BASE}/plant/data"
+        params = {"plant_id": plant_id}
+        resp = requests.get(
+            url,
+            headers=get_growatt_headers(cfg),
+            params=params,
+            timeout=15,
+        )
+
+        try:
+            resp.raise_for_status()
+        except HTTPError as http_err:
+            status_code = resp.status_code
+            msg = f"[{nome}] HTTP ERRO API Growatt ({status_code}): {http_err}"
+            print(msg)
+            logger.error(msg)
+            if 500 <= status_code < 600:
+                msg2 = f"[{nome}] API 5xx, tentando fallback via Selenium..."
+                print(msg2)
+                logger.warning(msg2)
+                try:
+                    return checar_usina(cfg)  # fallback Selenium
+                except Exception as e2:
+                    msg3 = f"[{nome}] Fallback Selenium também falhou: {e2}"
+                    print(msg3)
+                    logger.error(msg3)
+                    status_antigo = obter_status_anterior(nome)
+                    return status_antigo or "ERRO"
+            return "ERRO"
+
+        payload = resp.json()
+        if payload.get("error_code") != 0:
+            err = payload.get("error_msg")
+            msg = f"[{nome}] ERRO API: {err}"
+            print(msg)
+            logger.error(msg)
+            if err == "error_frequently_access":
+                msg2 = f"[{nome}] Rate limit na API, tentando fallback via Selenium..."
+                print(msg2)
+                logger.warning(msg2)
+                try:
+                    return checar_usina(cfg)
+                except Exception as e2:
+                    msg3 = f"[{nome}] Fallback Selenium também falhou: {e2}"
+                    print(msg3)
+                    logger.error(msg3)
+                    status_antigo = obter_status_anterior(nome)
+                    return status_antigo or "ERRO"
+            return "ERRO"
+
+        data = payload.get("data", {}) or {}
+        current_power = float(data.get("current_power", 0) or 0)
+        last_update_raw = (data.get("last_update_time") or "").strip()
+
+        msg = (
+            f"[{nome}] current_power = {current_power} kW, "
+            f"last_update_time = {last_update_raw}"
+        )
+        print(msg)
+        logger.info(msg)
+
+        minutos_diferenca = None
+        if last_update_raw:
+            try:
+                dt_local = datetime.strptime(last_update_raw, "%Y-%m-%d %H:%M:%S")
+                dt_local = dt_local.replace(tzinfo=timezone(timedelta(hours=-3)))
+                agora_local = datetime.now(timezone(timedelta(hours=-3)))
+                minutos_diferenca = (agora_local - dt_local).total_seconds() / 60.0
+            except Exception as e:
+                msg = f"[{nome}] ERRO ao parsear last_update_time: {e}"
+                print(msg)
+                logger.error(msg)
+                minutos_diferenca = None
+
+        if (
+            minutos_diferenca is not None
+            and minutos_diferenca <= limite_minutos_offline
+        ):
+            return "ONLINE"
+
+        if current_power > limite_kw:
+            return "ONLINE"
+
+        if (
+            minutos_diferenca is not None
+            and limite_minutos_offline < minutos_diferenca <= limite_minutos_erro
+        ):
+            return "OFFLINE"
+
+        if minutos_diferenca is not None and minutos_diferenca > limite_minutos_erro:
+            return "ERRO"
+
+        status_antigo = obter_status_anterior(nome)
+        msg = f"[{nome}] Sem info confiável, mantendo status anterior: {status_antigo}"
+        print(msg)
+        logger.warning(msg)
+        return status_antigo or "ERRO"
+
+    except Exception as e:
+        msg = f"[{nome}] ERRO API Growatt: {e}"
+        print(msg)
+        logger.error(msg)
+        try:
+            msg2 = f"[{nome}] Tentando Selenium como último recurso..."
+            print(msg2)
+            logger.warning(msg2)
+            return checar_usina(cfg)
+        except Exception as e2:
+            msg3 = f"[{nome}] Selenium também falhou: {e2}"
+            print(msg3)
+            logger.error(msg3)
+            return "ERRO"
+
+
 def enviar_whatsapp_alerta(
     nome_usina: str, status_novo: str, status_antigo: str = None, responsavel: str = ""
 ):
@@ -140,7 +314,6 @@ def enviar_whatsapp_alerta(
         "ALERTA MONITORAMENTO SOLAR\n\n"
         f"Usina: {nome_usina}\n"
         f"Status atual: {status_novo}\n"
-        # f"Status anterior: {status_antigo or 'desconhecido'}\n"
         f"Responsável técnico: {responsavel or 'não cadastrado'}\n"
         f"Data/hora: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
     )
@@ -162,9 +335,13 @@ def enviar_whatsapp_alerta(
 
     try:
         resp = requests.post(url, headers=headers, json=payload, timeout=15)
-        print(f"[WHATSAPP] HTTP {resp.status_code} - {resp.text}")
+        msg = f"[WHATSAPP] HTTP {resp.status_code} - {resp.text}"
+        print(msg)
+        logger.info(msg)
     except Exception as e:
-        print(f"[WHATSAPP] Erro ao enviar alerta: {e}")
+        msg = f"[WHATSAPP] Erro ao enviar alerta: {e}"
+        print(msg)
+        logger.error(msg)
 
 
 def criar_driver():
@@ -176,7 +353,6 @@ def criar_driver():
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--remote-debugging-port=9222")
 
-    # usa o Chrome que você acabou de instalar:
     options.binary_location = "/usr/bin/google-chrome"
 
     service = Service(ChromeDriverManager().install())
@@ -194,32 +370,42 @@ def checar_usina(cfg: dict) -> str:
     os.makedirs(debug_dir, exist_ok=True)
 
     try:
-        print(f"[{nome}] 1. Acessando URL: {cfg['url_login']}")
+        msg = f"[{nome}] 1. Acessando URL: {cfg['url_login']}"
+        print(msg)
+        logger.info(msg)
         driver.get(cfg["url_login"])
 
         import time
 
-        print(f"[{nome}] 1.5. Aguardando SPA carregar...")
-        time.sleep(8)  # espera 8 segundos para o Vue/React renderizar
+        msg = f"[{nome}] 1.5. Aguardando SPA carregar..."
+        print(msg)
+        logger.info(msg)
+        time.sleep(8)
 
         try:
-            print(f"[{nome}] 1.6. Fechando banner cookies...")
+            msg = f"[{nome}] 1.6. Fechando banner cookies..."
+            print(msg)
+            logger.info(msg)
             cookie_disagree = driver.find_element(
                 By.XPATH, "//button[contains(., 'I disagree')]"
             )
             cookie_disagree.click()
             time.sleep(2)
-            print(f"[{nome}] 1.7. Cookies fechados")
+            msg = f"[{nome}] 1.7. Cookies fechados"
+            print(msg)
+            logger.info(msg)
         except Exception:
-            print(f"[{nome}] 1.7. Sem banner cookies")
-            pass
+            msg = f"[{nome}] 1.7. Sem banner cookies"
+            print(msg)
+            logger.info(msg)
 
         driver.save_screenshot(f"{debug_dir}/{nome}_01_inicial.png")
 
         wait = WebDriverWait(driver, 30)
 
-        # Campo usuário
-        print(f"[{nome}] 2. Procurando campo usuário: {cfg['user_sel']}")
+        msg = f"[{nome}] 2. Procurando campo usuário: {cfg['user_sel']}"
+        print(msg)
+        logger.info(msg)
         el_user = wait.until(
             EC.presence_of_element_located((By.CSS_SELECTOR, cfg["user_sel"]))
         )
@@ -227,15 +413,17 @@ def checar_usina(cfg: dict) -> str:
         el_user.send_keys(os.getenv(cfg["usuario_env"]))
         driver.save_screenshot(f"{debug_dir}/{nome}_02_usuario_preenchido.png")
 
-        # Campo senha
-        print(f"[{nome}] 3. Procurando campo senha: {cfg['pass_sel']}")
+        msg = f"[{nome}] 3. Procurando campo senha: {cfg['pass_sel']}"
+        print(msg)
+        logger.info(msg)
         el_pass = driver.find_element(By.CSS_SELECTOR, cfg["pass_sel"])
         el_pass.clear()
         el_pass.send_keys(os.getenv(cfg["senha_env"]))
         driver.save_screenshot(f"{debug_dir}/{nome}_03_senha_preenchida.png")
 
-        # Botão login
-        print(f"[{nome}] 4. Procurando botão: {cfg['btn_sel']}")
+        msg = f"[{nome}] 4. Procurando botão: {cfg['btn_sel']}"
+        print(msg)
+        logger.info(msg)
         btn = driver.find_element(By.CSS_SELECTOR, cfg["btn_sel"])
         driver.execute_script("arguments[0].scrollIntoView(true);", btn)
         driver.save_screenshot(f"{debug_dir}/{nome}_04_antes_clicar.png")
@@ -245,23 +433,27 @@ def checar_usina(cfg: dict) -> str:
         except Exception:
             driver.execute_script("arguments[0].click();", btn)
 
-        print(f"[{nome}] 5. Login clicado, aguardando...")
-        time.sleep(5)  # espera carregar
+        msg = f"[{nome}] 5. Login clicado, aguardando..."
+        print(msg)
+        logger.info(msg)
+        time.sleep(5)
         driver.save_screenshot(f"{debug_dir}/{nome}_05_apos_login.png")
 
-        # Esperar elemento de status aparecer
-        print(f"[{nome}] 6. Procurando status: {cfg['status_sel']}")
+        msg = f"[{nome}] 6. Procurando status: {cfg['status_sel']}"
+        print(msg)
+        logger.info(msg)
 
         try:
-            # 1ª tentativa: seletor CSS configurado (ex.: span.green)
             el_status = wait.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, cfg["status_sel"]))
             )
         except TimeoutException:
-            # 2ª tentativa (Growatt): célula que contém "Connection Status"
-            print(
-                f"[{nome}] 6b. Não achei '{cfg['status_sel']}', tentando XPath do texto..."
+            msg = (
+                f"[{nome}] 6b. Não achei '{cfg['status_sel']}', "
+                f"tentando XPath do texto..."
             )
+            print(msg)
+            logger.warning(msg)
             el_status = wait.until(
                 EC.presence_of_element_located(
                     (
@@ -274,19 +466,21 @@ def checar_usina(cfg: dict) -> str:
         driver.save_screenshot(f"{debug_dir}/{nome}_06_status_encontrado.png")
 
         texto = (el_status.text or "").strip().lower()
-        print(f"[{nome}] 7. Texto lido: '{texto}'")
+        msg = f"[{nome}] 7. Texto lido: '{texto}'"
+        print(msg)
+        logger.info(msg)
 
-        # para Growatt e demais: só "connected" é ONLINE; qualquer outro texto => OFFLINE
         if cfg["online_texto"].lower() in texto:
             status_final = "ONLINE"
         else:
             status_final = "OFFLINE"
 
     except Exception as e:
-        print(f"[{nome}] ERRO DETALHADO: {type(e).__name__}: {str(e)}")
+        msg = f"[{nome}] ERRO DETALHADO: {type(e).__name__}: {str(e)}"
+        print(msg)
+        logger.error(msg)
         driver.save_screenshot(f"{debug_dir}/{nome}_99_erro.png")
 
-        # Salvar HTML para análise
         with open(f"{debug_dir}/{nome}_erro.html", "w", encoding="utf-8") as f:
             f.write(driver.page_source)
 
@@ -299,7 +493,7 @@ def checar_usina(cfg: dict) -> str:
 
 def checar_usina_cookies(cfg: dict) -> str:
     """Usina que usa cookies (sem login)."""
-    import pickle, json, time
+    import pickle, json as json_mod, time
 
     driver = criar_driver()
     status_final = "ERRO"
@@ -308,22 +502,25 @@ def checar_usina_cookies(cfg: dict) -> str:
     cookie_path = os.path.join(os.path.dirname(__file__), "..", cfg["cookie_file"])
 
     try:
-        print(f"[{nome}] 1. Carregando cookies...")
+        msg = f"[{nome}] 1. Carregando cookies..."
+        print(msg)
+        logger.info(msg)
 
         if not os.path.exists(cookie_path):
-            print(f"[{nome}] ERRO: {cookie_path} não encontrado!")
+            msg = f"[{nome}] ERRO: {cookie_path} não encontrado!"
+            print(msg)
+            logger.error(msg)
             return "ERRO"
 
         driver.get(cfg["url_dashboard"])
         time.sleep(2)
 
-        # Detecta pelo sufixo se é pickle (.pkl) ou json
         if cfg["cookie_file"].endswith(".pkl"):
             with open(cookie_path, "rb") as f:
                 cookies = pickle.load(f)
         else:
             with open(cookie_path, "r", encoding="utf-8") as f:
-                cookies = json.load(f)
+                cookies = json_mod.load(f)
 
         for cookie in cookies:
             try:
@@ -333,14 +530,20 @@ def checar_usina_cookies(cfg: dict) -> str:
             except Exception:
                 pass
 
-        print(f"[{nome}] 2. Cookies carregados, acessando dashboard...")
+        msg = f"[{nome}] 2. Cookies carregados, acessando dashboard..."
+        print(msg)
+        logger.info(msg)
         driver.refresh()
         time.sleep(8)
 
-        print(f"[{nome}] 3. Procurando status: {cfg['status_sel']}")
+        msg = f"[{nome}] 3. Procurando status: {cfg['status_sel']}"
+        print(msg)
+        logger.info(msg)
         el_status = driver.find_element(By.CSS_SELECTOR, cfg["status_sel"])
         texto = (el_status.text or "").strip().lower()
-        print(f"[{nome}] 4. Texto lido: '{texto}'")
+        msg = f"[{nome}] 4. Texto lido: '{texto}'"
+        print(msg)
+        logger.info(msg)
 
         if cfg["online_texto"].lower() in texto:
             status_final = "ONLINE"
@@ -350,7 +553,9 @@ def checar_usina_cookies(cfg: dict) -> str:
             status_final = "ERRO"
 
     except Exception as e:
-        print(f"[{nome}] ERRO: {e}")
+        msg = f"[{nome}] ERRO: {e}"
+        print(msg)
+        logger.error(msg)
         status_final = "ERRO"
     finally:
         driver.quit()
@@ -378,14 +583,10 @@ def verificar_expiracao_cookies(cookie_file: str, dias_aviso: int = 5) -> dict:
         with open(cookie_path, "rb") as f:
             cookies = pickle.load(f)
 
-        # Procurar token JWT (geralmente tem "exp" nele)
         for cookie in cookies:
             if "value" in cookie and cookie["value"].startswith("eyJ"):
-                # É um JWT, decodificar
                 try:
-                    # JWT formato: header.payload.signature
                     payload_b64 = cookie["value"].split(".")[1]
-                    # Adicionar padding se necessário
                     payload_b64 += "=" * (4 - len(payload_b64) % 4)
                     payload_json = base64.b64decode(payload_b64).decode("utf-8")
                     payload = json.loads(payload_json)
@@ -401,7 +602,7 @@ def verificar_expiracao_cookies(cookie_file: str, dias_aviso: int = 5) -> dict:
                             "expira_em": exp_date.strftime("%d/%m/%Y %H:%M"),
                             "precisa_renovar": dias_restantes <= dias_aviso,
                         }
-                except Exception as e:
+                except Exception:
                     continue
 
         return {
@@ -415,9 +616,10 @@ def verificar_expiracao_cookies(cookie_file: str, dias_aviso: int = 5) -> dict:
 
 
 def main():
-    print("=== Iniciando coleta de status das usinas ===")
+    msg = "=== Iniciando coleta de status das usinas ==="
+    print(msg)
+    logger.info(msg)
 
-    # Verificar cookies antes de começar
     cookies_verificados = set()
 
     for cfg in USINAS:
@@ -428,37 +630,43 @@ def main():
             if info.get("precisa_renovar"):
                 dias = info.get("expira_em_dias", 0)
                 if dias > 0:
-                    print(
-                        f"\n⚠️  AVISO: Cookies de {cfg['nome']} expiram em {dias} dias ({info.get('expira_em')})"
-                    )
-                    print(
+                    msg = (
+                        f"\n⚠️  AVISO: Cookies de {cfg['nome']} expiram em {dias} dias "
+                        f"({info.get('expira_em')})\n"
                         f"    Renove antes de {info.get('expira_em')} para evitar falhas!\n"
                     )
                 else:
-                    print(
-                        f"\n❌ URGENTE: Cookies de {cfg['nome']} expiraram ou estão inválidos!"
-                    )
+                    msg = f"\n❌ URGENTE: Cookies de {cfg['nome']} expiraram ou estão inválidos!\n"
+                print(msg)
+                logger.warning(msg.strip())
 
-    # Coletar status normalmente
     for cfg in USINAS:
         nome = cfg["nome"]
         responsavel = cfg.get("responsavel", "")
-        print(f"-> Checando {nome} ...")
+        msg = f"-> Checando {nome} ..."
+        print(msg)
+        logger.info(msg)
 
-        if cfg.get("usa_cookies"):
+        if cfg.get("tipo") == "growatt_api":
+            status_novo = checar_usina_growatt_api(cfg)
+        elif cfg.get("usa_cookies"):
             status_novo = checar_usina_cookies(cfg)
         else:
             status_novo = checar_usina(cfg)
 
         status_antigo = obter_status_anterior(nome)
         salvar_status(nome, status_novo)
-        print(f"   {nome}: {status_novo} (antes: {status_antigo})")
+        msg = f"   {nome}: {status_novo} (antes: {status_antigo})"
+        print(msg)
+        logger.info(msg)
 
-        # Regra: OFFLINE ou ERRO
-        if status_novo in ("OFFLINE", "ERRO"):
-            print(
-                f"[ALERTA] {nome} em estado crítico ({status_antigo} -> {status_novo}). Enviando WhatsApp..."
+        if status_novo in ("OFFLINE", "ERRO") and status_novo != status_antigo:
+            msg = (
+                f"[ALERTA] {nome} em estado crítico "
+                f"({status_antigo} -> {status_novo}). Enviando WhatsApp..."
             )
+            print(msg)
+            logger.warning(msg)
             enviar_whatsapp_alerta(nome, status_novo, status_antigo, responsavel)
 
 

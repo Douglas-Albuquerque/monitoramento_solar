@@ -27,6 +27,7 @@ cookies/*
 webapp/logs/
 debug/
 *.log
+logs/
 
 # IDE e editores
 .vscode/
