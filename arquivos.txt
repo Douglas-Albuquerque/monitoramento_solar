@@ -1,15 +1,26 @@
 .:
-cookies_solarman.pkl
-cookies_solarman.txt
+arquivos.txt
+cookies
 debug
-env
+evolution_api
+logs
 README.md
 requirements.txt
-robô
+robo
+venv
 webapp
 
+./cookies:
+cookies_solarman.pkl
+cookies_solarman.txt
+cookies_ufv_atlanta.json
+cookies_ufv_atlanta.pkl
+json_para_pkl_growatt.py
+
 ./debug:
+UFV-ATLANTA_01_dashboard_sem_cookies.png
 UFV-ATLANTA_01_inicial.png
+UFV-ATLANTA_02_dashboard_com_cookies.png
 UFV-ATLANTA_02_usuario_preenchido.png
 UFV-ATLANTA_03_senha_preenchida.png
 UFV-ATLANTA_04_antes_clicar.png
@@ -31,21 +42,32 @@ UFV HELENA-2_03_senha_preenchida.png
 UFV HELENA-2_04_antes_clicar.png
 UFV HELENA-2_05_apos_login.png
 UFV HELENA-2_06_status_encontrado.png
-UFV HELENA-2_99_erro.png
-UFV HELENA-2_erro.html
 
-./env:
-teste_selenium.py
-venv
+./evolution_api:
+docker-compose.yaml
+zap.py
 
-./env/venv:
+./logs:
+robo_status.log
+robo_status.log.1
+robo_status.log.2
+robo_status.log.3
+
+./robo:
+coletar_status.bkp
+coletar_status copy.py
+coletar_status.py
+coletor.log
+config.py
+
+./venv:
 bin
 include
 lib
 lib64
 pyvenv.cfg
 
-./env/venv/bin:
+./venv/bin:
 activate
 activate.csh
 activate.fish
@@ -61,15 +83,15 @@ python3
 python3.10
 wsdump
 
-./env/venv/include:
+./venv/include:
 
-./env/venv/lib:
+./venv/lib:
 python3.10
 
-./env/venv/lib/python3.10:
+./venv/lib/python3.10:
 site-packages
 
-./env/venv/lib/python3.10/site-packages:
+./venv/lib/python3.10/site-packages:
 attr
 attrs
 attrs-25.4.0.dist-info
@@ -106,7 +128,7 @@ outcome-1.3.0.post0.dist-info
 packaging
 packaging-26.0.dist-info
 pip
-pip-22.0.2.dist-info
+pip-25.3.dist-info
 pkg_resources
 __pycache__
 PySocks-1.7.1.dist-info
@@ -140,7 +162,7 @@ werkzeug-3.1.5.dist-info
 wsproto
 wsproto-1.3.2.dist-info
 
-./env/venv/lib/python3.10/site-packages/attr:
+./venv/lib/python3.10/site-packages/attr:
 _cmp.py
 _cmp.pyi
 _compat.py
@@ -166,7 +188,7 @@ validators.pyi
 _version_info.py
 _version_info.pyi
 
-./env/venv/lib/python3.10/site-packages/attr/__pycache__:
+./venv/lib/python3.10/site-packages/attr/__pycache__:
 _cmp.cpython-310.pyc
 _compat.cpython-310.pyc
 _config.cpython-310.pyc
@@ -181,7 +203,7 @@ setters.cpython-310.pyc
 validators.cpython-310.pyc
 _version_info.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/attrs:
+./venv/lib/python3.10/site-packages/attrs:
 converters.py
 exceptions.py
 filters.py
@@ -192,7 +214,7 @@ py.typed
 setters.py
 validators.py
 
-./env/venv/lib/python3.10/site-packages/attrs/__pycache__:
+./venv/lib/python3.10/site-packages/attrs/__pycache__:
 converters.cpython-310.pyc
 exceptions.cpython-310.pyc
 filters.cpython-310.pyc
@@ -200,36 +222,38 @@ __init__.cpython-310.pyc
 setters.cpython-310.pyc
 validators.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/attrs-25.4.0.dist-info:
+./venv/lib/python3.10/site-packages/attrs-25.4.0.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/attrs-25.4.0.dist-info/licenses:
+./venv/lib/python3.10/site-packages/attrs-25.4.0.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/blinker:
+./venv/lib/python3.10/site-packages/blinker:
 base.py
 __init__.py
 __pycache__
 py.typed
 _utilities.py
 
-./env/venv/lib/python3.10/site-packages/blinker/__pycache__:
+./venv/lib/python3.10/site-packages/blinker/__pycache__:
 base.cpython-310.pyc
 __init__.cpython-310.pyc
 _utilities.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/blinker-1.9.0.dist-info:
+./venv/lib/python3.10/site-packages/blinker-1.9.0.dist-info:
 INSTALLER
 LICENSE.txt
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/certifi:
+./venv/lib/python3.10/site-packages/certifi:
 cacert.pem
 core.py
 __init__.py
@@ -237,23 +261,24 @@ __main__.py
 __pycache__
 py.typed
 
-./env/venv/lib/python3.10/site-packages/certifi/__pycache__:
+./venv/lib/python3.10/site-packages/certifi/__pycache__:
 core.cpython-310.pyc
 __init__.cpython-310.pyc
 __main__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/certifi-2026.1.4.dist-info:
+./venv/lib/python3.10/site-packages/certifi-2026.1.4.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/certifi-2026.1.4.dist-info/licenses:
+./venv/lib/python3.10/site-packages/certifi-2026.1.4.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/charset_normalizer:
+./venv/lib/python3.10/site-packages/charset_normalizer:
 api.py
 cd.py
 cli
@@ -270,16 +295,16 @@ py.typed
 utils.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/charset_normalizer/cli:
+./venv/lib/python3.10/site-packages/charset_normalizer/cli:
 __init__.py
 __main__.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/charset_normalizer/cli/__pycache__:
+./venv/lib/python3.10/site-packages/charset_normalizer/cli/__pycache__:
 __init__.cpython-310.pyc
 __main__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/charset_normalizer/__pycache__:
+./venv/lib/python3.10/site-packages/charset_normalizer/__pycache__:
 api.cpython-310.pyc
 cd.cpython-310.pyc
 constant.cpython-310.pyc
@@ -291,19 +316,20 @@ models.cpython-310.pyc
 utils.cpython-310.pyc
 version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/charset_normalizer-3.4.4.dist-info:
+./venv/lib/python3.10/site-packages/charset_normalizer-3.4.4.dist-info:
 entry_points.txt
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/charset_normalizer-3.4.4.dist-info/licenses:
+./venv/lib/python3.10/site-packages/charset_normalizer-3.4.4.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/click:
+./venv/lib/python3.10/site-packages/click:
 _compat.py
 core.py
 decorators.py
@@ -324,7 +350,7 @@ _utils.py
 utils.py
 _winconsole.py
 
-./env/venv/lib/python3.10/site-packages/click/__pycache__:
+./venv/lib/python3.10/site-packages/click/__pycache__:
 _compat.cpython-310.pyc
 core.cpython-310.pyc
 decorators.cpython-310.pyc
@@ -343,26 +369,27 @@ _utils.cpython-310.pyc
 utils.cpython-310.pyc
 _winconsole.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/click-8.3.1.dist-info:
+./venv/lib/python3.10/site-packages/click-8.3.1.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/click-8.3.1.dist-info/licenses:
+./venv/lib/python3.10/site-packages/click-8.3.1.dist-info/licenses:
 LICENSE.txt
 
-./env/venv/lib/python3.10/site-packages/_distutils_hack:
+./venv/lib/python3.10/site-packages/_distutils_hack:
 __init__.py
 override.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/_distutils_hack/__pycache__:
+./venv/lib/python3.10/site-packages/_distutils_hack/__pycache__:
 __init__.cpython-310.pyc
 override.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/dotenv:
+./venv/lib/python3.10/site-packages/dotenv:
 cli.py
 __init__.py
 ipython.py
@@ -374,7 +401,7 @@ py.typed
 variables.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/dotenv/__pycache__:
+./venv/lib/python3.10/site-packages/dotenv/__pycache__:
 cli.cpython-310.pyc
 __init__.cpython-310.pyc
 ipython.cpython-310.pyc
@@ -384,7 +411,7 @@ parser.cpython-310.pyc
 variables.cpython-310.pyc
 version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/exceptiongroup:
+./venv/lib/python3.10/site-packages/exceptiongroup:
 _catch.py
 _exceptions.py
 _formatting.py
@@ -394,7 +421,7 @@ py.typed
 _suppress.py
 _version.py
 
-./env/venv/lib/python3.10/site-packages/exceptiongroup/__pycache__:
+./venv/lib/python3.10/site-packages/exceptiongroup/__pycache__:
 _catch.cpython-310.pyc
 _exceptions.cpython-310.pyc
 _formatting.cpython-310.pyc
@@ -402,17 +429,18 @@ __init__.cpython-310.pyc
 _suppress.cpython-310.pyc
 _version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/exceptiongroup-1.3.1.dist-info:
+./venv/lib/python3.10/site-packages/exceptiongroup-1.3.1.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/exceptiongroup-1.3.1.dist-info/licenses:
+./venv/lib/python3.10/site-packages/exceptiongroup-1.3.1.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/flask:
+./venv/lib/python3.10/site-packages/flask:
 app.py
 blueprints.py
 cli.py
@@ -436,18 +464,18 @@ typing.py
 views.py
 wrappers.py
 
-./env/venv/lib/python3.10/site-packages/flask/json:
+./venv/lib/python3.10/site-packages/flask/json:
 __init__.py
 provider.py
 __pycache__
 tag.py
 
-./env/venv/lib/python3.10/site-packages/flask/json/__pycache__:
+./venv/lib/python3.10/site-packages/flask/json/__pycache__:
 __init__.cpython-310.pyc
 provider.cpython-310.pyc
 tag.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/flask/__pycache__:
+./venv/lib/python3.10/site-packages/flask/__pycache__:
 app.cpython-310.pyc
 blueprints.cpython-310.pyc
 cli.cpython-310.pyc
@@ -467,19 +495,19 @@ typing.cpython-310.pyc
 views.cpython-310.pyc
 wrappers.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/flask/sansio:
+./venv/lib/python3.10/site-packages/flask/sansio:
 app.py
 blueprints.py
 __pycache__
 README.md
 scaffold.py
 
-./env/venv/lib/python3.10/site-packages/flask/sansio/__pycache__:
+./venv/lib/python3.10/site-packages/flask/sansio/__pycache__:
 app.cpython-310.pyc
 blueprints.cpython-310.pyc
 scaffold.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/flask-3.1.2.dist-info:
+./venv/lib/python3.10/site-packages/flask-3.1.2.dist-info:
 entry_points.txt
 INSTALLER
 licenses
@@ -488,10 +516,10 @@ RECORD
 REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/flask-3.1.2.dist-info/licenses:
+./venv/lib/python3.10/site-packages/flask-3.1.2.dist-info/licenses:
 LICENSE.txt
 
-./env/venv/lib/python3.10/site-packages/h11:
+./venv/lib/python3.10/site-packages/h11:
 _abnf.py
 _connection.py
 _events.py
@@ -506,7 +534,7 @@ _util.py
 _version.py
 _writers.py
 
-./env/venv/lib/python3.10/site-packages/h11/__pycache__:
+./venv/lib/python3.10/site-packages/h11/__pycache__:
 _abnf.cpython-310.pyc
 _connection.cpython-310.pyc
 _events.cpython-310.pyc
@@ -519,18 +547,19 @@ _util.cpython-310.pyc
 _version.cpython-310.pyc
 _writers.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/h11-0.16.0.dist-info:
+./venv/lib/python3.10/site-packages/h11-0.16.0.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/h11-0.16.0.dist-info/licenses:
+./venv/lib/python3.10/site-packages/h11-0.16.0.dist-info/licenses:
 LICENSE.txt
 
-./env/venv/lib/python3.10/site-packages/idna:
+./venv/lib/python3.10/site-packages/idna:
 codec.py
 compat.py
 core.py
@@ -542,7 +571,7 @@ __pycache__
 py.typed
 uts46data.py
 
-./env/venv/lib/python3.10/site-packages/idna/__pycache__:
+./venv/lib/python3.10/site-packages/idna/__pycache__:
 codec.cpython-310.pyc
 compat.cpython-310.pyc
 core.cpython-310.pyc
@@ -552,17 +581,18 @@ intranges.cpython-310.pyc
 package_data.cpython-310.pyc
 uts46data.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/idna-3.11.dist-info:
+./venv/lib/python3.10/site-packages/idna-3.11.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/idna-3.11.dist-info/licenses:
+./venv/lib/python3.10/site-packages/idna-3.11.dist-info/licenses:
 LICENSE.md
 
-./env/venv/lib/python3.10/site-packages/itsdangerous:
+./venv/lib/python3.10/site-packages/itsdangerous:
 encoding.py
 exc.py
 __init__.py
@@ -574,7 +604,7 @@ signer.py
 timed.py
 url_safe.py
 
-./env/venv/lib/python3.10/site-packages/itsdangerous/__pycache__:
+./venv/lib/python3.10/site-packages/itsdangerous/__pycache__:
 encoding.cpython-310.pyc
 exc.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -584,14 +614,15 @@ signer.cpython-310.pyc
 timed.cpython-310.pyc
 url_safe.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/itsdangerous-2.2.0.dist-info:
+./venv/lib/python3.10/site-packages/itsdangerous-2.2.0.dist-info:
 INSTALLER
 LICENSE.txt
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/jinja2:
+./venv/lib/python3.10/site-packages/jinja2:
 async_utils.py
 bccache.py
 compiler.py
@@ -620,7 +651,7 @@ tests.py
 utils.py
 visitor.py
 
-./env/venv/lib/python3.10/site-packages/jinja2/__pycache__:
+./venv/lib/python3.10/site-packages/jinja2/__pycache__:
 async_utils.cpython-310.pyc
 bccache.cpython-310.pyc
 compiler.cpython-310.pyc
@@ -647,18 +678,19 @@ tests.cpython-310.pyc
 utils.cpython-310.pyc
 visitor.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/jinja2-3.1.6.dist-info:
+./venv/lib/python3.10/site-packages/jinja2-3.1.6.dist-info:
 entry_points.txt
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/jinja2-3.1.6.dist-info/licenses:
+./venv/lib/python3.10/site-packages/jinja2-3.1.6.dist-info/licenses:
 LICENSE.txt
 
-./env/venv/lib/python3.10/site-packages/markupsafe:
+./venv/lib/python3.10/site-packages/markupsafe:
 __init__.py
 _native.py
 __pycache__
@@ -667,49 +699,50 @@ _speedups.c
 _speedups.cpython-310-x86_64-linux-gnu.so
 _speedups.pyi
 
-./env/venv/lib/python3.10/site-packages/markupsafe/__pycache__:
+./venv/lib/python3.10/site-packages/markupsafe/__pycache__:
 __init__.cpython-310.pyc
 _native.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/markupsafe-3.0.3.dist-info:
+./venv/lib/python3.10/site-packages/markupsafe-3.0.3.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/markupsafe-3.0.3.dist-info/licenses:
+./venv/lib/python3.10/site-packages/markupsafe-3.0.3.dist-info/licenses:
 LICENSE.txt
 
-./env/venv/lib/python3.10/site-packages/mysql:
+./venv/lib/python3.10/site-packages/mysql:
 ai
 connector
 __init__.py
 __pycache__
 vendor
 
-./env/venv/lib/python3.10/site-packages/mysql/ai:
+./venv/lib/python3.10/site-packages/mysql/ai:
 genai
 __init__.py
 ml
 __pycache__
 utils
 
-./env/venv/lib/python3.10/site-packages/mysql/ai/genai:
+./venv/lib/python3.10/site-packages/mysql/ai/genai:
 embedding.py
 generation.py
 __init__.py
 __pycache__
 vector_store.py
 
-./env/venv/lib/python3.10/site-packages/mysql/ai/genai/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/ai/genai/__pycache__:
 embedding.cpython-310.pyc
 generation.cpython-310.pyc
 __init__.cpython-310.pyc
 vector_store.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/ai/ml:
+./venv/lib/python3.10/site-packages/mysql/ai/ml:
 base.py
 classifier.py
 __init__.py
@@ -719,7 +752,7 @@ __pycache__
 regressor.py
 transformer.py
 
-./env/venv/lib/python3.10/site-packages/mysql/ai/ml/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/ai/ml/__pycache__:
 base.cpython-310.pyc
 classifier.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -728,23 +761,23 @@ outlier.cpython-310.pyc
 regressor.cpython-310.pyc
 transformer.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/ai/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/ai/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/ai/utils:
+./venv/lib/python3.10/site-packages/mysql/ai/utils:
 atomic_cursor.py
 dependencies.py
 __init__.py
 __pycache__
 utils.py
 
-./env/venv/lib/python3.10/site-packages/mysql/ai/utils/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/ai/utils/__pycache__:
 atomic_cursor.cpython-310.pyc
 dependencies.cpython-310.pyc
 __init__.cpython-310.pyc
 utils.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector:
+./venv/lib/python3.10/site-packages/mysql/connector:
 abstracts.py
 aio
 authentication.py
@@ -778,7 +811,7 @@ types.py
 utils.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/aio:
+./venv/lib/python3.10/site-packages/mysql/connector/aio:
 abstracts.py
 authentication.py
 charsets.py
@@ -794,7 +827,7 @@ protocol.py
 __pycache__
 utils.py
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/aio/plugins:
+./venv/lib/python3.10/site-packages/mysql/connector/aio/plugins:
 authentication_kerberos_client.py
 authentication_ldap_sasl_client.py
 authentication_oci_client.py
@@ -807,7 +840,7 @@ mysql_native_password.py
 __pycache__
 sha256_password.py
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/aio/plugins/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/aio/plugins/__pycache__:
 authentication_kerberos_client.cpython-310.pyc
 authentication_ldap_sasl_client.cpython-310.pyc
 authentication_oci_client.cpython-310.pyc
@@ -819,7 +852,7 @@ mysql_clear_password.cpython-310.pyc
 mysql_native_password.cpython-310.pyc
 sha256_password.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/aio/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/aio/__pycache__:
 abstracts.cpython-310.pyc
 authentication.cpython-310.pyc
 charsets.cpython-310.pyc
@@ -833,7 +866,7 @@ pooling.cpython-310.pyc
 protocol.cpython-310.pyc
 utils.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/django:
+./venv/lib/python3.10/site-packages/mysql/connector/django:
 base.py
 client.py
 compiler.py
@@ -846,7 +879,7 @@ __pycache__
 schema.py
 validation.py
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/django/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/django/__pycache__:
 base.cpython-310.pyc
 client.cpython-310.pyc
 compiler.cpython-310.pyc
@@ -858,37 +891,37 @@ operations.cpython-310.pyc
 schema.cpython-310.pyc
 validation.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/locales:
+./venv/lib/python3.10/site-packages/mysql/connector/locales:
 eng
 __init__.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/locales/eng:
+./venv/lib/python3.10/site-packages/mysql/connector/locales/eng:
 client_error.py
 __init__.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/locales/eng/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/locales/eng/__pycache__:
 client_error.cpython-310.pyc
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/locales/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/locales/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/opentelemetry:
+./venv/lib/python3.10/site-packages/mysql/connector/opentelemetry:
 constants.py
 context_propagation.py
 __init__.py
 instrumentation.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/opentelemetry/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/opentelemetry/__pycache__:
 constants.cpython-310.pyc
 context_propagation.cpython-310.pyc
 __init__.cpython-310.pyc
 instrumentation.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/plugins:
+./venv/lib/python3.10/site-packages/mysql/connector/plugins:
 authentication_kerberos_client.py
 authentication_ldap_sasl_client.py
 authentication_oci_client.py
@@ -901,7 +934,7 @@ mysql_native_password.py
 __pycache__
 sha256_password.py
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/plugins/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/plugins/__pycache__:
 authentication_kerberos_client.cpython-310.pyc
 authentication_ldap_sasl_client.cpython-310.pyc
 authentication_oci_client.cpython-310.pyc
@@ -913,7 +946,7 @@ mysql_clear_password.cpython-310.pyc
 mysql_native_password.cpython-310.pyc
 sha256_password.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/connector/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/connector/__pycache__:
 abstracts.cpython-310.pyc
 authentication.cpython-310.pyc
 charsets.cpython-310.pyc
@@ -940,16 +973,16 @@ types.cpython-310.pyc
 utils.cpython-310.pyc
 version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/__pycache__:
+./venv/lib/python3.10/site-packages/mysql/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/mysql/vendor:
+./venv/lib/python3.10/site-packages/mysql/vendor:
 libcrypto.so.3
 libssl.so.3
 plugin
 private
 
-./env/venv/lib/python3.10/site-packages/mysql/vendor/plugin:
+./venv/lib/python3.10/site-packages/mysql/vendor/plugin:
 authentication_kerberos_client.so
 authentication_ldap_sasl_client.so
 authentication_oci_client.so
@@ -957,7 +990,7 @@ authentication_openid_connect_client.so
 authentication_webauthn_client.so
 mysql_native_password.so
 
-./env/venv/lib/python3.10/site-packages/mysql/vendor/private:
+./venv/lib/python3.10/site-packages/mysql/vendor/private:
 libcom_err.so.3
 libcom_err.so.3.0
 libfido2.so.1
@@ -974,7 +1007,7 @@ libsasl2.so.3
 libsasl2.so.3.0.0
 sasl2
 
-./env/venv/lib/python3.10/site-packages/mysql/vendor/private/sasl2:
+./venv/lib/python3.10/site-packages/mysql/vendor/private/sasl2:
 libanonymous.so
 libanonymous.so.3
 libanonymous.so.3.0.0
@@ -997,7 +1030,7 @@ libscram.so
 libscram.so.3
 libscram.so.3.0.0
 
-./env/venv/lib/python3.10/site-packages/mysql_connector_python-9.6.0.dist-info:
+./venv/lib/python3.10/site-packages/mysql_connector_python-9.6.0.dist-info:
 INSTALLER
 LICENSE.txt
 METADATA
@@ -1006,7 +1039,7 @@ REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/outcome:
+./venv/lib/python3.10/site-packages/outcome:
 _impl.py
 __init__.py
 __pycache__
@@ -1014,23 +1047,24 @@ py.typed
 _util.py
 _version.py
 
-./env/venv/lib/python3.10/site-packages/outcome/__pycache__:
+./venv/lib/python3.10/site-packages/outcome/__pycache__:
 _impl.cpython-310.pyc
 __init__.cpython-310.pyc
 _util.cpython-310.pyc
 _version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/outcome-1.3.0.post0.dist-info:
+./venv/lib/python3.10/site-packages/outcome-1.3.0.post0.dist-info:
 INSTALLER
 LICENSE
 LICENSE.APACHE2
 LICENSE.MIT
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/packaging:
+./venv/lib/python3.10/site-packages/packaging:
 _elffile.py
 __init__.py
 licenses
@@ -1050,16 +1084,16 @@ _tokenizer.py
 utils.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/packaging/licenses:
+./venv/lib/python3.10/site-packages/packaging/licenses:
 __init__.py
 __pycache__
 _spdx.py
 
-./env/venv/lib/python3.10/site-packages/packaging/licenses/__pycache__:
+./venv/lib/python3.10/site-packages/packaging/licenses/__pycache__:
 __init__.cpython-310.pyc
 _spdx.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/packaging/__pycache__:
+./venv/lib/python3.10/site-packages/packaging/__pycache__:
 _elffile.cpython-310.pyc
 __init__.cpython-310.pyc
 _manylinux.cpython-310.pyc
@@ -1076,27 +1110,29 @@ _tokenizer.cpython-310.pyc
 utils.cpython-310.pyc
 version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/packaging-26.0.dist-info:
+./venv/lib/python3.10/site-packages/packaging-26.0.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/packaging-26.0.dist-info/licenses:
+./venv/lib/python3.10/site-packages/packaging-26.0.dist-info/licenses:
 LICENSE
 LICENSE.APACHE
 LICENSE.BSD
 
-./env/venv/lib/python3.10/site-packages/pip:
+./venv/lib/python3.10/site-packages/pip:
 __init__.py
 _internal
 __main__.py
+__pip-runner__.py
 __pycache__
 py.typed
 _vendor
 
-./env/venv/lib/python3.10/site-packages/pip/_internal:
+./venv/lib/python3.10/site-packages/pip/_internal:
 build_env.py
 cache.py
 cli
@@ -1121,11 +1157,12 @@ utils
 vcs
 wheel_builder.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/cli:
+./venv/lib/python3.10/site-packages/pip/_internal/cli:
 autocompletion.py
 base_command.py
 cmdoptions.py
 command_context.py
+index_command.py
 __init__.py
 main_parser.py
 main.py
@@ -1136,11 +1173,12 @@ req_command.py
 spinners.py
 status_codes.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/cli/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/cli/__pycache__:
 autocompletion.cpython-310.pyc
 base_command.cpython-310.pyc
 cmdoptions.cpython-310.pyc
 command_context.cpython-310.pyc
+index_command.cpython-310.pyc
 __init__.cpython-310.pyc
 main.cpython-310.pyc
 main_parser.cpython-310.pyc
@@ -1150,7 +1188,7 @@ req_command.cpython-310.pyc
 spinners.cpython-310.pyc
 status_codes.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/commands:
+./venv/lib/python3.10/site-packages/pip/_internal/commands:
 cache.py
 check.py
 completion.py
@@ -1162,15 +1200,17 @@ hash.py
 help.py
 index.py
 __init__.py
+inspect.py
 install.py
 list.py
+lock.py
 __pycache__
 search.py
 show.py
 uninstall.py
 wheel.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/commands/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/commands/__pycache__:
 cache.cpython-310.pyc
 check.cpython-310.pyc
 completion.cpython-310.pyc
@@ -1182,14 +1222,16 @@ hash.cpython-310.pyc
 help.cpython-310.pyc
 index.cpython-310.pyc
 __init__.cpython-310.pyc
+inspect.cpython-310.pyc
 install.cpython-310.pyc
 list.cpython-310.pyc
+lock.cpython-310.pyc
 search.cpython-310.pyc
 show.cpython-310.pyc
 uninstall.cpython-310.pyc
 wheel.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/distributions:
+./venv/lib/python3.10/site-packages/pip/_internal/distributions:
 base.py
 __init__.py
 installed.py
@@ -1197,78 +1239,98 @@ __pycache__
 sdist.py
 wheel.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/distributions/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/distributions/__pycache__:
 base.cpython-310.pyc
 __init__.cpython-310.pyc
 installed.cpython-310.pyc
 sdist.cpython-310.pyc
 wheel.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/index:
+./venv/lib/python3.10/site-packages/pip/_internal/index:
 collector.py
 __init__.py
 package_finder.py
 __pycache__
 sources.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/index/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/index/__pycache__:
 collector.cpython-310.pyc
 __init__.cpython-310.pyc
 package_finder.cpython-310.pyc
 sources.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/locations:
+./venv/lib/python3.10/site-packages/pip/_internal/locations:
 base.py
 _distutils.py
 __init__.py
 __pycache__
 _sysconfig.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/locations/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/locations/__pycache__:
 base.cpython-310.pyc
 _distutils.cpython-310.pyc
 __init__.cpython-310.pyc
 _sysconfig.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/metadata:
+./venv/lib/python3.10/site-packages/pip/_internal/metadata:
 base.py
+importlib
 __init__.py
+_json.py
 pkg_resources.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/metadata/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/metadata/importlib:
+_compat.py
+_dists.py
+_envs.py
+__init__.py
+__pycache__
+
+./venv/lib/python3.10/site-packages/pip/_internal/metadata/importlib/__pycache__:
+_compat.cpython-310.pyc
+_dists.cpython-310.pyc
+_envs.cpython-310.pyc
+__init__.cpython-310.pyc
+
+./venv/lib/python3.10/site-packages/pip/_internal/metadata/__pycache__:
 base.cpython-310.pyc
 __init__.cpython-310.pyc
+_json.cpython-310.pyc
 pkg_resources.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/models:
+./venv/lib/python3.10/site-packages/pip/_internal/models:
 candidate.py
 direct_url.py
 format_control.py
 index.py
 __init__.py
+installation_report.py
 link.py
 __pycache__
+pylock.py
 scheme.py
 search_scope.py
 selection_prefs.py
 target_python.py
 wheel.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/models/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/models/__pycache__:
 candidate.cpython-310.pyc
 direct_url.cpython-310.pyc
 format_control.cpython-310.pyc
 index.cpython-310.pyc
 __init__.cpython-310.pyc
+installation_report.cpython-310.pyc
 link.cpython-310.pyc
+pylock.cpython-310.pyc
 scheme.cpython-310.pyc
 search_scope.cpython-310.pyc
 selection_prefs.cpython-310.pyc
 target_python.cpython-310.pyc
 wheel.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/network:
+./venv/lib/python3.10/site-packages/pip/_internal/network:
 auth.py
 cache.py
 download.py
@@ -1279,7 +1341,7 @@ session.py
 utils.py
 xmlrpc.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/network/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/network/__pycache__:
 auth.cpython-310.pyc
 cache.cpython-310.pyc
 download.cpython-310.pyc
@@ -1289,7 +1351,7 @@ session.cpython-310.pyc
 utils.cpython-310.pyc
 xmlrpc.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/operations:
+./venv/lib/python3.10/site-packages/pip/_internal/operations:
 build
 check.py
 freeze.py
@@ -1298,45 +1360,39 @@ install
 prepare.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/operations/build:
+./venv/lib/python3.10/site-packages/pip/_internal/operations/build:
+build_tracker.py
 __init__.py
 metadata_editable.py
-metadata_legacy.py
 metadata.py
 __pycache__
 wheel_editable.py
-wheel_legacy.py
 wheel.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/operations/build/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/operations/build/__pycache__:
+build_tracker.cpython-310.pyc
 __init__.cpython-310.pyc
 metadata.cpython-310.pyc
 metadata_editable.cpython-310.pyc
-metadata_legacy.cpython-310.pyc
 wheel.cpython-310.pyc
 wheel_editable.cpython-310.pyc
-wheel_legacy.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/operations/install:
-editable_legacy.py
+./venv/lib/python3.10/site-packages/pip/_internal/operations/install:
 __init__.py
-legacy.py
 __pycache__
 wheel.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/operations/install/__pycache__:
-editable_legacy.cpython-310.pyc
+./venv/lib/python3.10/site-packages/pip/_internal/operations/install/__pycache__:
 __init__.cpython-310.pyc
-legacy.cpython-310.pyc
 wheel.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/operations/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/operations/__pycache__:
 check.cpython-310.pyc
 freeze.cpython-310.pyc
 __init__.cpython-310.pyc
 prepare.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/__pycache__:
 build_env.cpython-310.pyc
 cache.cpython-310.pyc
 configuration.cpython-310.pyc
@@ -1347,46 +1403,46 @@ pyproject.cpython-310.pyc
 self_outdated_check.cpython-310.pyc
 wheel_builder.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/req:
+./venv/lib/python3.10/site-packages/pip/_internal/req:
 constructors.py
 __init__.py
 __pycache__
+req_dependency_group.py
 req_file.py
 req_install.py
 req_set.py
-req_tracker.py
 req_uninstall.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/req/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/req/__pycache__:
 constructors.cpython-310.pyc
 __init__.cpython-310.pyc
+req_dependency_group.cpython-310.pyc
 req_file.cpython-310.pyc
 req_install.cpython-310.pyc
 req_set.cpython-310.pyc
-req_tracker.cpython-310.pyc
 req_uninstall.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/resolution:
+./venv/lib/python3.10/site-packages/pip/_internal/resolution:
 base.py
 __init__.py
 legacy
 __pycache__
 resolvelib
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/resolution/legacy:
+./venv/lib/python3.10/site-packages/pip/_internal/resolution/legacy:
 __init__.py
 __pycache__
 resolver.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/resolution/legacy/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/resolution/legacy/__pycache__:
 __init__.cpython-310.pyc
 resolver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/resolution/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/resolution/__pycache__:
 base.cpython-310.pyc
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib:
+./venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib:
 base.py
 candidates.py
 factory.py
@@ -1398,7 +1454,7 @@ reporter.py
 requirements.py
 resolver.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/__pycache__:
 base.cpython-310.pyc
 candidates.cpython-310.pyc
 factory.cpython-310.pyc
@@ -1409,30 +1465,27 @@ reporter.cpython-310.pyc
 requirements.cpython-310.pyc
 resolver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/utils:
+./venv/lib/python3.10/site-packages/pip/_internal/utils:
 appdirs.py
 compatibility_tags.py
 compat.py
 datetime.py
 deprecation.py
 direct_url_helpers.py
-distutils_args.py
 egg_link.py
-encoding.py
 entrypoints.py
 filesystem.py
 filetypes.py
 glibc.py
 hashes.py
 __init__.py
-inject_securetransport.py
+_jaraco_text.py
 logging.py
 _log.py
 misc.py
-models.py
 packaging.py
 __pycache__
-setuptools_build.py
+retry.py
 subprocess.py
 temp_dir.py
 unpacking.py
@@ -1440,29 +1493,26 @@ urls.py
 virtualenv.py
 wheel.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/utils/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/utils/__pycache__:
 appdirs.cpython-310.pyc
 compat.cpython-310.pyc
 compatibility_tags.cpython-310.pyc
 datetime.cpython-310.pyc
 deprecation.cpython-310.pyc
 direct_url_helpers.cpython-310.pyc
-distutils_args.cpython-310.pyc
 egg_link.cpython-310.pyc
-encoding.cpython-310.pyc
 entrypoints.cpython-310.pyc
 filesystem.cpython-310.pyc
 filetypes.cpython-310.pyc
 glibc.cpython-310.pyc
 hashes.cpython-310.pyc
 __init__.cpython-310.pyc
-inject_securetransport.cpython-310.pyc
+_jaraco_text.cpython-310.pyc
 _log.cpython-310.pyc
 logging.cpython-310.pyc
 misc.cpython-310.pyc
-models.cpython-310.pyc
 packaging.cpython-310.pyc
-setuptools_build.cpython-310.pyc
+retry.cpython-310.pyc
 subprocess.cpython-310.pyc
 temp_dir.cpython-310.pyc
 unpacking.cpython-310.pyc
@@ -1470,7 +1520,7 @@ urls.cpython-310.pyc
 virtualenv.cpython-310.pyc
 wheel.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/vcs:
+./venv/lib/python3.10/site-packages/pip/_internal/vcs:
 bazaar.py
 git.py
 __init__.py
@@ -1479,7 +1529,7 @@ __pycache__
 subversion.py
 versioncontrol.py
 
-./env/venv/lib/python3.10/site-packages/pip/_internal/vcs/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_internal/vcs/__pycache__:
 bazaar.cpython-310.pyc
 git.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -1487,70 +1537,66 @@ mercurial.cpython-310.pyc
 subversion.cpython-310.pyc
 versioncontrol.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/__pycache__:
+./venv/lib/python3.10/site-packages/pip/__pycache__:
 __init__.cpython-310.pyc
 __main__.cpython-310.pyc
+__pip-runner__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor:
+./venv/lib/python3.10/site-packages/pip/_vendor:
 cachecontrol
 certifi
-chardet
-colorama
+dependency_groups
 distlib
-distro.py
-html5lib
+distro
 idna
 __init__.py
 msgpack
 packaging
-pep517
 pkg_resources
 platformdirs
-progress
 __pycache__
 pygments
-pyparsing
+pyproject_hooks
+README.rst
 requests
 resolvelib
 rich
-six.py
-tenacity
 tomli
-typing_extensions.py
+tomli_w
+truststore
 urllib3
 vendor.txt
-webencodings
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol:
+./venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol:
 adapter.py
 cache.py
 caches
 _cmd.py
-compat.py
 controller.py
 filewrapper.py
 heuristics.py
 __init__.py
+LICENSE.txt
 __pycache__
+py.typed
 serialize.py
 wrapper.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches:
+./venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches:
 file_cache.py
 __init__.py
 __pycache__
 redis_cache.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches/__pycache__:
 file_cache.cpython-310.pyc
 __init__.cpython-310.pyc
 redis_cache.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/__pycache__:
 adapter.cpython-310.pyc
 cache.cpython-310.pyc
 _cmd.cpython-310.pyc
-compat.cpython-310.pyc
 controller.cpython-310.pyc
 filewrapper.cpython-310.pyc
 heuristics.cpython-310.pyc
@@ -1558,282 +1604,88 @@ __init__.cpython-310.pyc
 serialize.cpython-310.pyc
 wrapper.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/certifi:
+./venv/lib/python3.10/site-packages/pip/_vendor/certifi:
 cacert.pem
 core.py
 __init__.py
+LICENSE
 __main__.py
 __pycache__
+py.typed
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/certifi/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/certifi/__pycache__:
 core.cpython-310.pyc
 __init__.cpython-310.pyc
 __main__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/chardet:
-big5freq.py
-big5prober.py
-chardistribution.py
-charsetgroupprober.py
-charsetprober.py
-cli
-codingstatemachine.py
+./venv/lib/python3.10/site-packages/pip/_vendor/dependency_groups:
+_implementation.py
+__init__.py
+LICENSE.txt
+_lint_dependency_groups.py
+__main__.py
+_pip_wrapper.py
+__pycache__
+py.typed
+_toml_compat.py
+
+./venv/lib/python3.10/site-packages/pip/_vendor/dependency_groups/__pycache__:
+_implementation.cpython-310.pyc
+__init__.cpython-310.pyc
+_lint_dependency_groups.cpython-310.pyc
+__main__.cpython-310.pyc
+_pip_wrapper.cpython-310.pyc
+_toml_compat.cpython-310.pyc
+
+./venv/lib/python3.10/site-packages/pip/_vendor/distlib:
 compat.py
-cp949prober.py
-enums.py
-escprober.py
-escsm.py
-eucjpprober.py
-euckrfreq.py
-euckrprober.py
-euctwfreq.py
-euctwprober.py
-gb2312freq.py
-gb2312prober.py
-hebrewprober.py
 __init__.py
-jisfreq.py
-jpcntx.py
-langbulgarianmodel.py
-langgreekmodel.py
-langhebrewmodel.py
-langhungarianmodel.py
-langrussianmodel.py
-langthaimodel.py
-langturkishmodel.py
-latin1prober.py
-mbcharsetprober.py
-mbcsgroupprober.py
-mbcssm.py
-metadata
-__pycache__
-sbcharsetprober.py
-sbcsgroupprober.py
-sjisprober.py
-universaldetector.py
-utf8prober.py
-version.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/chardet/cli:
-chardetect.py
-__init__.py
-__pycache__
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/chardet/cli/__pycache__:
-chardetect.cpython-310.pyc
-__init__.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/chardet/metadata:
-__init__.py
-languages.py
-__pycache__
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/chardet/metadata/__pycache__:
-__init__.cpython-310.pyc
-languages.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/chardet/__pycache__:
-big5freq.cpython-310.pyc
-big5prober.cpython-310.pyc
-chardistribution.cpython-310.pyc
-charsetgroupprober.cpython-310.pyc
-charsetprober.cpython-310.pyc
-codingstatemachine.cpython-310.pyc
-compat.cpython-310.pyc
-cp949prober.cpython-310.pyc
-enums.cpython-310.pyc
-escprober.cpython-310.pyc
-escsm.cpython-310.pyc
-eucjpprober.cpython-310.pyc
-euckrfreq.cpython-310.pyc
-euckrprober.cpython-310.pyc
-euctwfreq.cpython-310.pyc
-euctwprober.cpython-310.pyc
-gb2312freq.cpython-310.pyc
-gb2312prober.cpython-310.pyc
-hebrewprober.cpython-310.pyc
-__init__.cpython-310.pyc
-jisfreq.cpython-310.pyc
-jpcntx.cpython-310.pyc
-langbulgarianmodel.cpython-310.pyc
-langgreekmodel.cpython-310.pyc
-langhebrewmodel.cpython-310.pyc
-langhungarianmodel.cpython-310.pyc
-langrussianmodel.cpython-310.pyc
-langthaimodel.cpython-310.pyc
-langturkishmodel.cpython-310.pyc
-latin1prober.cpython-310.pyc
-mbcharsetprober.cpython-310.pyc
-mbcsgroupprober.cpython-310.pyc
-mbcssm.cpython-310.pyc
-sbcharsetprober.cpython-310.pyc
-sbcsgroupprober.cpython-310.pyc
-sjisprober.cpython-310.pyc
-universaldetector.cpython-310.pyc
-utf8prober.cpython-310.pyc
-version.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/colorama:
-ansi.py
-ansitowin32.py
-initialise.py
-__init__.py
-__pycache__
-win32.py
-winterm.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/colorama/__pycache__:
-ansi.cpython-310.pyc
-ansitowin32.cpython-310.pyc
-__init__.cpython-310.pyc
-initialise.cpython-310.pyc
-win32.cpython-310.pyc
-winterm.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/distlib:
-compat.py
-database.py
-index.py
-__init__.py
-locators.py
-manifest.py
-markers.py
-metadata.py
+LICENSE.txt
 __pycache__
 resources.py
 scripts.py
+t32.exe
+t64-arm.exe
+t64.exe
 util.py
-version.py
-wheel.py
+w32.exe
+w64-arm.exe
+w64.exe
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/distlib/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/distlib/__pycache__:
 compat.cpython-310.pyc
-database.cpython-310.pyc
-index.cpython-310.pyc
 __init__.cpython-310.pyc
-locators.cpython-310.pyc
-manifest.cpython-310.pyc
-markers.cpython-310.pyc
-metadata.cpython-310.pyc
 resources.cpython-310.pyc
 scripts.cpython-310.pyc
 util.cpython-310.pyc
-version.cpython-310.pyc
-wheel.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib:
-constants.py
-filters
-html5parser.py
-_ihatexml.py
+./venv/lib/python3.10/site-packages/pip/_vendor/distro:
+distro.py
 __init__.py
-_inputstream.py
+LICENSE
+__main__.py
 __pycache__
-serializer.py
-_tokenizer.py
-treeadapters
-treebuilders
-treewalkers
-_trie
-_utils.py
+py.typed
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters:
-alphabeticalattributes.py
-base.py
-__init__.py
-inject_meta_charset.py
-lint.py
-optionaltags.py
-__pycache__
-sanitizer.py
-whitespace.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/__pycache__:
-alphabeticalattributes.cpython-310.pyc
-base.cpython-310.pyc
+./venv/lib/python3.10/site-packages/pip/_vendor/distro/__pycache__:
+distro.cpython-310.pyc
 __init__.cpython-310.pyc
-inject_meta_charset.cpython-310.pyc
-lint.cpython-310.pyc
-optionaltags.cpython-310.pyc
-sanitizer.cpython-310.pyc
-whitespace.cpython-310.pyc
+__main__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/__pycache__:
-constants.cpython-310.pyc
-html5parser.cpython-310.pyc
-_ihatexml.cpython-310.pyc
-__init__.cpython-310.pyc
-_inputstream.cpython-310.pyc
-serializer.cpython-310.pyc
-_tokenizer.cpython-310.pyc
-_utils.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treeadapters:
-genshi.py
-__init__.py
-__pycache__
-sax.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treeadapters/__pycache__:
-genshi.cpython-310.pyc
-__init__.cpython-310.pyc
-sax.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treebuilders:
-base.py
-dom.py
-etree_lxml.py
-etree.py
-__init__.py
-__pycache__
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treebuilders/__pycache__:
-base.cpython-310.pyc
-dom.cpython-310.pyc
-etree.cpython-310.pyc
-etree_lxml.cpython-310.pyc
-__init__.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers:
-base.py
-dom.py
-etree_lxml.py
-etree.py
-genshi.py
-__init__.py
-__pycache__
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers/__pycache__:
-base.cpython-310.pyc
-dom.cpython-310.pyc
-etree.cpython-310.pyc
-etree_lxml.cpython-310.pyc
-genshi.cpython-310.pyc
-__init__.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_trie:
-_base.py
-__init__.py
-__pycache__
-py.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_trie/__pycache__:
-_base.cpython-310.pyc
-__init__.cpython-310.pyc
-py.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/idna:
+./venv/lib/python3.10/site-packages/pip/_vendor/idna:
 codec.py
 compat.py
 core.py
 idnadata.py
 __init__.py
 intranges.py
+LICENSE.md
 package_data.py
 __pycache__
+py.typed
 uts46data.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/idna/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/idna/__pycache__:
 codec.cpython-310.pyc
 compat.cpython-310.pyc
 core.cpython-310.pyc
@@ -1843,102 +1695,89 @@ intranges.cpython-310.pyc
 package_data.cpython-310.pyc
 uts46data.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/msgpack:
+./venv/lib/python3.10/site-packages/pip/_vendor/msgpack:
+COPYING
 exceptions.py
 ext.py
 fallback.py
 __init__.py
 __pycache__
-_version.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/msgpack/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/msgpack/__pycache__:
 exceptions.cpython-310.pyc
 ext.cpython-310.pyc
 fallback.cpython-310.pyc
 __init__.cpython-310.pyc
-_version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/packaging:
-__about__.py
+./venv/lib/python3.10/site-packages/pip/_vendor/packaging:
+_elffile.py
 __init__.py
+LICENSE
+LICENSE.APACHE
+LICENSE.BSD
+licenses
 _manylinux.py
 markers.py
+metadata.py
 _musllinux.py
+_parser.py
 __pycache__
+py.typed
 requirements.py
 specifiers.py
 _structures.py
 tags.py
+_tokenizer.py
 utils.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/packaging/__pycache__:
-__about__.cpython-310.pyc
+./venv/lib/python3.10/site-packages/pip/_vendor/packaging/licenses:
+__init__.py
+__pycache__
+_spdx.py
+
+./venv/lib/python3.10/site-packages/pip/_vendor/packaging/licenses/__pycache__:
+__init__.cpython-310.pyc
+_spdx.cpython-310.pyc
+
+./venv/lib/python3.10/site-packages/pip/_vendor/packaging/__pycache__:
+_elffile.cpython-310.pyc
 __init__.cpython-310.pyc
 _manylinux.cpython-310.pyc
 markers.cpython-310.pyc
+metadata.cpython-310.pyc
 _musllinux.cpython-310.pyc
+_parser.cpython-310.pyc
 requirements.cpython-310.pyc
 specifiers.cpython-310.pyc
 _structures.cpython-310.pyc
 tags.cpython-310.pyc
+_tokenizer.cpython-310.pyc
 utils.cpython-310.pyc
 version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pep517:
-build.py
-check.py
-colorlog.py
-compat.py
-dirtools.py
-envbuild.py
+./venv/lib/python3.10/site-packages/pip/_vendor/pkg_resources:
 __init__.py
-in_process
-meta.py
-__pycache__
-wrappers.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pep517/in_process:
-__init__.py
-_in_process.py
+LICENSE
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pep517/in_process/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/pkg_resources/__pycache__:
 __init__.cpython-310.pyc
-_in_process.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pep517/__pycache__:
-build.cpython-310.pyc
-check.cpython-310.pyc
-colorlog.cpython-310.pyc
-compat.cpython-310.pyc
-dirtools.cpython-310.pyc
-envbuild.cpython-310.pyc
-__init__.cpython-310.pyc
-meta.cpython-310.pyc
-wrappers.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pkg_resources:
-__init__.py
-py31compat.py
-__pycache__
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pkg_resources/__pycache__:
-__init__.cpython-310.pyc
-py31compat.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs:
+./venv/lib/python3.10/site-packages/pip/_vendor/platformdirs:
 android.py
 api.py
 __init__.py
+LICENSE
 macos.py
 __main__.py
 __pycache__
+py.typed
 unix.py
 version.py
 windows.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/__pycache__:
 android.cpython-310.pyc
 api.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -1948,29 +1787,10 @@ unix.cpython-310.pyc
 version.cpython-310.pyc
 windows.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/progress:
-bar.py
-colors.py
-counter.py
-__init__.py
-__pycache__
-spinner.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/progress/__pycache__:
-bar.cpython-310.pyc
-colors.cpython-310.pyc
-counter.cpython-310.pyc
+./venv/lib/python3.10/site-packages/pip/_vendor/__pycache__:
 __init__.cpython-310.pyc
-spinner.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/__pycache__:
-distro.cpython-310.pyc
-__init__.cpython-310.pyc
-six.cpython-310.pyc
-typing_extensions.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments:
-cmdline.py
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments:
 console.py
 filter.py
 filters
@@ -1979,6 +1799,7 @@ formatters
 __init__.py
 lexer.py
 lexers
+LICENSE
 __main__.py
 modeline.py
 plugin.py
@@ -1992,59 +1813,34 @@ token.py
 unistring.py
 util.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/filters:
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/filters:
 __init__.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/filters/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/filters/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters:
-bbcode.py
-groff.py
-html.py
-img.py
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters:
 __init__.py
-irc.py
-latex.py
 _mapping.py
-other.py
-pangomarkup.py
 __pycache__
-rtf.py
-svg.py
-terminal256.py
-terminal.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/__pycache__:
-bbcode.cpython-310.pyc
-groff.cpython-310.pyc
-html.cpython-310.pyc
-img.cpython-310.pyc
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/__pycache__:
 __init__.cpython-310.pyc
-irc.cpython-310.pyc
-latex.cpython-310.pyc
 _mapping.cpython-310.pyc
-other.cpython-310.pyc
-pangomarkup.cpython-310.pyc
-rtf.cpython-310.pyc
-svg.cpython-310.pyc
-terminal256.cpython-310.pyc
-terminal.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers:
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers:
 __init__.py
 _mapping.py
 __pycache__
 python.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers/__pycache__:
 __init__.cpython-310.pyc
 _mapping.cpython-310.pyc
 python.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/__pycache__:
-cmdline.cpython-310.pyc
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/__pycache__:
 console.cpython-310.pyc
 filter.cpython-310.pyc
 formatter.cpython-310.pyc
@@ -2061,47 +1857,37 @@ token.cpython-310.pyc
 unistring.cpython-310.pyc
 util.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/styles:
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/styles:
 __init__.py
+_mapping.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pygments/styles/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/pygments/styles/__pycache__:
 __init__.cpython-310.pyc
+_mapping.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing:
-actions.py
-common.py
-core.py
-diagram
-exceptions.py
-helpers.py
+./venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks:
+_impl.py
 __init__.py
+_in_process
+LICENSE
 __pycache__
-results.py
-testing.py
-unicode.py
-util.py
+py.typed
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/diagram:
+./venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process:
 __init__.py
+_in_process.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/diagram/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/__pycache__:
+__init__.cpython-310.pyc
+_in_process.cpython-310.pyc
+
+./venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/__pycache__:
+_impl.cpython-310.pyc
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/__pycache__:
-actions.cpython-310.pyc
-common.cpython-310.pyc
-core.cpython-310.pyc
-exceptions.cpython-310.pyc
-helpers.cpython-310.pyc
-__init__.cpython-310.pyc
-results.cpython-310.pyc
-testing.cpython-310.pyc
-unicode.cpython-310.pyc
-util.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/requests:
+./venv/lib/python3.10/site-packages/pip/_vendor/requests:
 adapters.py
 api.py
 auth.py
@@ -2113,6 +1899,7 @@ help.py
 hooks.py
 __init__.py
 _internal_utils.py
+LICENSE
 models.py
 packages.py
 __pycache__
@@ -2122,7 +1909,7 @@ structures.py
 utils.py
 __version__.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/requests/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/requests/__pycache__:
 adapters.cpython-310.pyc
 api.cpython-310.pyc
 auth.cpython-310.pyc
@@ -2142,32 +1929,38 @@ structures.cpython-310.pyc
 utils.cpython-310.pyc
 __version__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib:
-compat
+./venv/lib/python3.10/site-packages/pip/_vendor/resolvelib:
 __init__.py
+LICENSE
 providers.py
 __pycache__
+py.typed
 reporters.py
-resolvers.py
+resolvers
 structs.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/compat:
-collections_abc.py
-__init__.py
-__pycache__
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/compat/__pycache__:
-collections_abc.cpython-310.pyc
-__init__.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/__pycache__:
 __init__.cpython-310.pyc
 providers.cpython-310.pyc
 reporters.cpython-310.pyc
-resolvers.cpython-310.pyc
 structs.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/rich:
+./venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/resolvers:
+abstract.py
+criterion.py
+exceptions.py
+__init__.py
+__pycache__
+resolution.py
+
+./venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/resolvers/__pycache__:
+abstract.cpython-310.pyc
+criterion.cpython-310.pyc
+exceptions.cpython-310.pyc
+__init__.cpython-310.pyc
+resolution.cpython-310.pyc
+
+./venv/lib/python3.10/site-packages/pip/_vendor/rich:
 abc.py
 align.py
 ansi.py
@@ -2188,7 +1981,9 @@ _emoji_codes.py
 emoji.py
 _emoji_replace.py
 errors.py
+_export_format.py
 _extension.py
+_fileno.py
 file_proxy.py
 filesize.py
 highlighter.py
@@ -2197,15 +1992,16 @@ _inspect.py
 json.py
 jupyter.py
 layout.py
+LICENSE
 live.py
 live_render.py
 logging.py
 _log_render.py
 _loop.py
-_lru_cache.py
 __main__.py
 markup.py
 measure.py
+_null_file.py
 padding.py
 pager.py
 palette.py
@@ -2218,6 +2014,7 @@ progress.py
 prompt.py
 protocol.py
 __pycache__
+py.typed
 _ratio.py
 region.py
 repr.py
@@ -2233,7 +2030,6 @@ styled.py
 style.py
 syntax.py
 table.py
-tabulate.py
 terminal_theme.py
 text.py
 theme.py
@@ -2241,10 +2037,12 @@ themes.py
 _timer.py
 traceback.py
 tree.py
+_win32_console.py
 _windows.py
+_windows_renderer.py
 _wrap.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/rich/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/rich/__pycache__:
 abc.cpython-310.pyc
 align.cpython-310.pyc
 ansi.cpython-310.pyc
@@ -2265,7 +2063,9 @@ _emoji_codes.cpython-310.pyc
 emoji.cpython-310.pyc
 _emoji_replace.cpython-310.pyc
 errors.cpython-310.pyc
+_export_format.cpython-310.pyc
 _extension.cpython-310.pyc
+_fileno.cpython-310.pyc
 file_proxy.cpython-310.pyc
 filesize.cpython-310.pyc
 highlighter.cpython-310.pyc
@@ -2279,10 +2079,10 @@ live_render.cpython-310.pyc
 logging.cpython-310.pyc
 _log_render.cpython-310.pyc
 _loop.cpython-310.pyc
-_lru_cache.cpython-310.pyc
 __main__.cpython-310.pyc
 markup.cpython-310.pyc
 measure.cpython-310.pyc
+_null_file.cpython-310.pyc
 padding.cpython-310.pyc
 pager.cpython-310.pyc
 palette.cpython-310.pyc
@@ -2309,7 +2109,6 @@ style.cpython-310.pyc
 styled.cpython-310.pyc
 syntax.cpython-310.pyc
 table.cpython-310.pyc
-tabulate.cpython-310.pyc
 terminal_theme.cpython-310.pyc
 text.cpython-310.pyc
 theme.cpython-310.pyc
@@ -2317,48 +2116,57 @@ themes.cpython-310.pyc
 _timer.cpython-310.pyc
 traceback.cpython-310.pyc
 tree.cpython-310.pyc
+_win32_console.cpython-310.pyc
 _windows.cpython-310.pyc
+_windows_renderer.cpython-310.pyc
 _wrap.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/tenacity:
-after.py
-_asyncio.py
-before.py
-before_sleep.py
+./venv/lib/python3.10/site-packages/pip/_vendor/tomli:
 __init__.py
-nap.py
-__pycache__
-retry.py
-stop.py
-tornadoweb.py
-_utils.py
-wait.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/__pycache__:
-after.cpython-310.pyc
-_asyncio.cpython-310.pyc
-before.cpython-310.pyc
-before_sleep.cpython-310.pyc
-__init__.cpython-310.pyc
-nap.cpython-310.pyc
-retry.cpython-310.pyc
-stop.cpython-310.pyc
-tornadoweb.cpython-310.pyc
-_utils.cpython-310.pyc
-wait.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/tomli:
-__init__.py
+LICENSE
 _parser.py
 __pycache__
+py.typed
 _re.py
+_types.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/tomli/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/tomli/__pycache__:
 __init__.cpython-310.pyc
 _parser.cpython-310.pyc
 _re.cpython-310.pyc
+_types.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3:
+./venv/lib/python3.10/site-packages/pip/_vendor/tomli_w:
+__init__.py
+LICENSE
+__pycache__
+py.typed
+_writer.py
+
+./venv/lib/python3.10/site-packages/pip/_vendor/tomli_w/__pycache__:
+__init__.cpython-310.pyc
+_writer.cpython-310.pyc
+
+./venv/lib/python3.10/site-packages/pip/_vendor/truststore:
+_api.py
+__init__.py
+LICENSE
+_macos.py
+_openssl.py
+__pycache__
+py.typed
+_ssl_constants.py
+_windows.py
+
+./venv/lib/python3.10/site-packages/pip/_vendor/truststore/__pycache__:
+_api.cpython-310.pyc
+__init__.cpython-310.pyc
+_macos.cpython-310.pyc
+_openssl.cpython-310.pyc
+_ssl_constants.cpython-310.pyc
+_windows.cpython-310.pyc
+
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3:
 _collections.py
 connectionpool.py
 connection.py
@@ -2367,6 +2175,7 @@ exceptions.py
 fields.py
 filepost.py
 __init__.py
+LICENSE.txt
 packages
 poolmanager.py
 __pycache__
@@ -2375,7 +2184,7 @@ response.py
 util
 _version.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib:
 _appengine_environ.py
 appengine.py
 __init__.py
@@ -2386,7 +2195,7 @@ _securetransport
 securetransport.py
 socks.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/__pycache__:
 appengine.cpython-310.pyc
 _appengine_environ.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -2395,37 +2204,39 @@ pyopenssl.cpython-310.pyc
 securetransport.cpython-310.pyc
 socks.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_securetransport:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_securetransport:
 bindings.py
 __init__.py
 low_level.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_securetransport/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_securetransport/__pycache__:
 bindings.cpython-310.pyc
 __init__.cpython-310.pyc
 low_level.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages:
 backports
 __init__.py
 __pycache__
 six.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/backports:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/backports:
 __init__.py
 makefile.py
 __pycache__
+weakref_finalize.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/backports/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/backports/__pycache__:
 __init__.cpython-310.pyc
 makefile.cpython-310.pyc
+weakref_finalize.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/__pycache__:
 __init__.cpython-310.pyc
 six.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/__pycache__:
 _collections.cpython-310.pyc
 connection.cpython-310.pyc
 connectionpool.cpython-310.pyc
@@ -2438,7 +2249,7 @@ request.cpython-310.pyc
 response.cpython-310.pyc
 _version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util:
 connection.py
 __init__.py
 proxy.py
@@ -2454,7 +2265,7 @@ timeout.py
 url.py
 wait.py
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/__pycache__:
+./venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/__pycache__:
 connection.cpython-310.pyc
 __init__.cpython-310.pyc
 proxy.cpython-310.pyc
@@ -2469,69 +2280,144 @@ timeout.cpython-310.pyc
 url.cpython-310.pyc
 wait.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pip/_vendor/webencodings:
-__init__.py
-labels.py
-mklabels.py
-__pycache__
-tests.py
-x_user_defined.py
-
-./env/venv/lib/python3.10/site-packages/pip/_vendor/webencodings/__pycache__:
-__init__.cpython-310.pyc
-labels.cpython-310.pyc
-mklabels.cpython-310.pyc
-tests.cpython-310.pyc
-x_user_defined.cpython-310.pyc
-
-./env/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info:
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info:
 entry_points.txt
 INSTALLER
-LICENSE.txt
+licenses
 METADATA
 RECORD
 REQUESTED
-top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/pkg_resources:
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses:
+AUTHORS.txt
+LICENSE.txt
+src
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src:
+pip
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip:
+_vendor
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor:
+cachecontrol
+certifi
+dependency_groups
+distlib
+distro
+idna
+msgpack
+packaging
+pkg_resources
+platformdirs
+pygments
+pyproject_hooks
+requests
+resolvelib
+rich
+tomli
+tomli_w
+truststore
+urllib3
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/cachecontrol:
+LICENSE.txt
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/certifi:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/dependency_groups:
+LICENSE.txt
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/distlib:
+LICENSE.txt
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/distro:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/idna:
+LICENSE.md
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/msgpack:
+COPYING
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/packaging:
+LICENSE
+LICENSE.APACHE
+LICENSE.BSD
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/pkg_resources:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/platformdirs:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/pygments:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/pyproject_hooks:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/requests:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/resolvelib:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/rich:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/tomli:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/tomli_w:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/truststore:
+LICENSE
+
+./venv/lib/python3.10/site-packages/pip-25.3.dist-info/licenses/src/pip/_vendor/urllib3:
+LICENSE.txt
+
+./venv/lib/python3.10/site-packages/pkg_resources:
 extern
 __init__.py
 __pycache__
 tests
 _vendor
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/extern:
+./venv/lib/python3.10/site-packages/pkg_resources/extern:
 __init__.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/extern/__pycache__:
+./venv/lib/python3.10/site-packages/pkg_resources/extern/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/__pycache__:
+./venv/lib/python3.10/site-packages/pkg_resources/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/tests:
+./venv/lib/python3.10/site-packages/pkg_resources/tests:
 data
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/tests/data:
+./venv/lib/python3.10/site-packages/pkg_resources/tests/data:
 my-test-package-source
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/tests/data/my-test-package-source:
+./venv/lib/python3.10/site-packages/pkg_resources/tests/data/my-test-package-source:
 __pycache__
 setup.py
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/tests/data/my-test-package-source/__pycache__:
+./venv/lib/python3.10/site-packages/pkg_resources/tests/data/my-test-package-source/__pycache__:
 setup.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/_vendor:
+./venv/lib/python3.10/site-packages/pkg_resources/_vendor:
 appdirs.py
 __init__.py
 packaging
 __pycache__
 pyparsing.py
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging:
+./venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging:
 __about__.py
 __init__.py
 _manylinux.py
@@ -2545,7 +2431,7 @@ tags.py
 utils.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/__pycache__:
+./venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/__pycache__:
 __about__.cpython-310.pyc
 __init__.cpython-310.pyc
 _manylinux.cpython-310.pyc
@@ -2558,25 +2444,26 @@ tags.cpython-310.pyc
 utils.cpython-310.pyc
 version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/pkg_resources/_vendor/__pycache__:
+./venv/lib/python3.10/site-packages/pkg_resources/_vendor/__pycache__:
 appdirs.cpython-310.pyc
 __init__.cpython-310.pyc
 pyparsing.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/__pycache__:
+./venv/lib/python3.10/site-packages/__pycache__:
 socks.cpython-310.pyc
 sockshandler.cpython-310.pyc
 typing_extensions.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/PySocks-1.7.1.dist-info:
+./venv/lib/python3.10/site-packages/PySocks-1.7.1.dist-info:
 INSTALLER
 LICENSE
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/python_dotenv-1.2.1.dist-info:
+./venv/lib/python3.10/site-packages/python_dotenv-1.2.1.dist-info:
 entry_points.txt
 INSTALLER
 licenses
@@ -2586,10 +2473,10 @@ REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/python_dotenv-1.2.1.dist-info/licenses:
+./venv/lib/python3.10/site-packages/python_dotenv-1.2.1.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/requests:
+./venv/lib/python3.10/site-packages/requests:
 adapters.py
 api.py
 auth.py
@@ -2610,7 +2497,7 @@ structures.py
 utils.py
 __version__.py
 
-./env/venv/lib/python3.10/site-packages/requests/__pycache__:
+./venv/lib/python3.10/site-packages/requests/__pycache__:
 adapters.cpython-310.pyc
 api.cpython-310.pyc
 auth.cpython-310.pyc
@@ -2630,18 +2517,19 @@ structures.cpython-310.pyc
 utils.cpython-310.pyc
 __version__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/requests-2.32.5.dist-info:
+./venv/lib/python3.10/site-packages/requests-2.32.5.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/requests-2.32.5.dist-info/licenses:
+./venv/lib/python3.10/site-packages/requests-2.32.5.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/selenium:
+./venv/lib/python3.10/site-packages/selenium:
 common
 __init__.py
 __pycache__
@@ -2649,20 +2537,20 @@ py.typed
 types.py
 webdriver
 
-./env/venv/lib/python3.10/site-packages/selenium/common:
+./venv/lib/python3.10/site-packages/selenium/common:
 exceptions.py
 __init__.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/selenium/common/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/common/__pycache__:
 exceptions.cpython-310.pyc
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/__pycache__:
 __init__.cpython-310.pyc
 types.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver:
+./venv/lib/python3.10/site-packages/selenium/webdriver:
 chrome
 chromium
 common
@@ -2677,7 +2565,7 @@ support
 webkitgtk
 wpewebkit
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/chrome:
+./venv/lib/python3.10/site-packages/selenium/webdriver/chrome:
 __init__.py
 options.py
 __pycache__
@@ -2685,14 +2573,14 @@ remote_connection.py
 service.py
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/chrome/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/chrome/__pycache__:
 __init__.cpython-310.pyc
 options.cpython-310.pyc
 remote_connection.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/chromium:
+./venv/lib/python3.10/site-packages/selenium/webdriver/chromium:
 __init__.py
 options.py
 __pycache__
@@ -2700,14 +2588,14 @@ remote_connection.py
 service.py
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/chromium/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/chromium/__pycache__:
 __init__.cpython-310.pyc
 options.cpython-310.pyc
 remote_connection.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common:
 action_chains.py
 actions
 alert.py
@@ -2734,7 +2622,7 @@ virtual_authenticator.py
 window.py
 windows
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/actions:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/actions:
 action_builder.py
 __init__.py
 input_device.py
@@ -2748,7 +2636,7 @@ __pycache__
 wheel_actions.py
 wheel_input.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/actions/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/actions/__pycache__:
 action_builder.cpython-310.pyc
 __init__.cpython-310.pyc
 input_device.cpython-310.pyc
@@ -2761,7 +2649,7 @@ pointer_input.cpython-310.pyc
 wheel_actions.cpython-310.pyc
 wheel_input.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/bidi:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/bidi:
 cdp.py
 console.py
 __init__.py
@@ -2769,20 +2657,20 @@ __pycache__
 script.py
 session.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/bidi/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/bidi/__pycache__:
 cdp.cpython-310.pyc
 console.cpython-310.pyc
 __init__.cpython-310.pyc
 script.cpython-310.pyc
 session.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools:
 v127
 v128
 v129
 v85
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v127:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v127:
 accessibility.py
 animation.py
 audits.py
@@ -2840,7 +2728,7 @@ util.py
 web_audio.py
 web_authn.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v127/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v127/__pycache__:
 accessibility.cpython-310.pyc
 animation.cpython-310.pyc
 audits.cpython-310.pyc
@@ -2896,7 +2784,7 @@ util.cpython-310.pyc
 web_audio.cpython-310.pyc
 web_authn.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v128:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v128:
 accessibility.py
 animation.py
 audits.py
@@ -2955,7 +2843,7 @@ util.py
 web_audio.py
 web_authn.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v128/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v128/__pycache__:
 accessibility.cpython-310.pyc
 animation.cpython-310.pyc
 audits.cpython-310.pyc
@@ -3012,7 +2900,7 @@ util.cpython-310.pyc
 web_audio.cpython-310.pyc
 web_authn.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v129:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v129:
 accessibility.py
 animation.py
 audits.py
@@ -3072,7 +2960,7 @@ util.py
 web_audio.py
 web_authn.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v129/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v129/__pycache__:
 accessibility.cpython-310.pyc
 animation.cpython-310.pyc
 audits.cpython-310.pyc
@@ -3130,7 +3018,7 @@ util.cpython-310.pyc
 web_audio.cpython-310.pyc
 web_authn.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v85:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v85:
 accessibility.py
 animation.py
 application_cache.py
@@ -3181,7 +3069,7 @@ util.py
 web_audio.py
 web_authn.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v85/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/devtools/v85/__pycache__:
 accessibility.cpython-310.pyc
 animation.cpython-310.pyc
 application_cache.cpython-310.pyc
@@ -3230,13 +3118,13 @@ util.cpython-310.pyc
 web_audio.cpython-310.pyc
 web_authn.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/linux:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/linux:
 selenium-manager
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/macos:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/macos:
 selenium-manager
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/__pycache__:
 action_chains.cpython-310.pyc
 alert.cpython-310.pyc
 by.cpython-310.pyc
@@ -3255,10 +3143,10 @@ utils.cpython-310.pyc
 virtual_authenticator.cpython-310.pyc
 window.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/common/windows:
+./venv/lib/python3.10/site-packages/selenium/webdriver/common/windows:
 selenium-manager.exe
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/edge:
+./venv/lib/python3.10/site-packages/selenium/webdriver/edge:
 __init__.py
 options.py
 __pycache__
@@ -3266,14 +3154,14 @@ remote_connection.py
 service.py
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/edge/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/edge/__pycache__:
 __init__.cpython-310.pyc
 options.cpython-310.pyc
 remote_connection.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/firefox:
+./venv/lib/python3.10/site-packages/selenium/webdriver/firefox:
 firefox_binary.py
 firefox_profile.py
 __init__.py
@@ -3284,7 +3172,7 @@ service.py
 webdriver_prefs.json
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/firefox/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/firefox/__pycache__:
 firefox_binary.cpython-310.pyc
 firefox_profile.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -3293,23 +3181,23 @@ remote_connection.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/ie:
+./venv/lib/python3.10/site-packages/selenium/webdriver/ie:
 __init__.py
 options.py
 __pycache__
 service.py
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/ie/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/ie/__pycache__:
 __init__.cpython-310.pyc
 options.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/remote:
+./venv/lib/python3.10/site-packages/selenium/webdriver/remote:
 bidi_connection.py
 command.py
 errorhandler.py
@@ -3329,7 +3217,7 @@ webdriver.py
 webelement.py
 websocket_connection.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/remote/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/remote/__pycache__:
 bidi_connection.cpython-310.pyc
 command.cpython-310.pyc
 errorhandler.cpython-310.pyc
@@ -3345,7 +3233,7 @@ webdriver.cpython-310.pyc
 webelement.cpython-310.pyc
 websocket_connection.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/safari:
+./venv/lib/python3.10/site-packages/selenium/webdriver/safari:
 __init__.py
 options.py
 permissions.py
@@ -3354,7 +3242,7 @@ remote_connection.py
 service.py
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/safari/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/safari/__pycache__:
 __init__.cpython-310.pyc
 options.cpython-310.pyc
 permissions.cpython-310.pyc
@@ -3362,7 +3250,7 @@ remote_connection.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/support:
+./venv/lib/python3.10/site-packages/selenium/webdriver/support:
 abstract_event_listener.py
 color.py
 event_firing_webdriver.py
@@ -3375,7 +3263,7 @@ select.py
 ui.py
 wait.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/support/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/support/__pycache__:
 abstract_event_listener.cpython-310.pyc
 color.cpython-310.pyc
 event_firing_webdriver.cpython-310.pyc
@@ -3387,33 +3275,33 @@ select.cpython-310.pyc
 ui.cpython-310.pyc
 wait.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/webkitgtk:
+./venv/lib/python3.10/site-packages/selenium/webdriver/webkitgtk:
 __init__.py
 options.py
 __pycache__
 service.py
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/webkitgtk/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/webkitgtk/__pycache__:
 __init__.cpython-310.pyc
 options.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/wpewebkit:
+./venv/lib/python3.10/site-packages/selenium/webdriver/wpewebkit:
 __init__.py
 options.py
 __pycache__
 service.py
 webdriver.py
 
-./env/venv/lib/python3.10/site-packages/selenium/webdriver/wpewebkit/__pycache__:
+./venv/lib/python3.10/site-packages/selenium/webdriver/wpewebkit/__pycache__:
 __init__.cpython-310.pyc
 options.cpython-310.pyc
 service.cpython-310.pyc
 webdriver.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/selenium-4.25.0.dist-info:
+./venv/lib/python3.10/site-packages/selenium-4.25.0.dist-info:
 INSTALLER
 LICENSE
 METADATA
@@ -3421,7 +3309,7 @@ RECORD
 REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/setuptools:
+./venv/lib/python3.10/site-packages/setuptools:
 archive_util.py
 build_meta.py
 cli-32.exe
@@ -3462,7 +3350,7 @@ version.py
 wheel.py
 windows_support.py
 
-./env/venv/lib/python3.10/site-packages/setuptools/command:
+./venv/lib/python3.10/site-packages/setuptools/command:
 alias.py
 bdist_egg.py
 bdist_rpm.py
@@ -3490,7 +3378,7 @@ test.py
 upload_docs.py
 upload.py
 
-./env/venv/lib/python3.10/site-packages/setuptools/command/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/command/__pycache__:
 alias.cpython-310.pyc
 bdist_egg.cpython-310.pyc
 bdist_rpm.cpython-310.pyc
@@ -3516,7 +3404,7 @@ test.cpython-310.pyc
 upload.cpython-310.pyc
 upload_docs.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools/_distutils:
+./venv/lib/python3.10/site-packages/setuptools/_distutils:
 archive_util.py
 bcppcompiler.py
 ccompiler.py
@@ -3550,7 +3438,7 @@ util.py
 versionpredicate.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/setuptools/_distutils/command:
+./venv/lib/python3.10/site-packages/setuptools/_distutils/command:
 bdist_dumb.py
 bdist_msi.py
 bdist.py
@@ -3577,7 +3465,7 @@ register.py
 sdist.py
 upload.py
 
-./env/venv/lib/python3.10/site-packages/setuptools/_distutils/command/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/_distutils/command/__pycache__:
 bdist.cpython-310.pyc
 bdist_dumb.cpython-310.pyc
 bdist_msi.cpython-310.pyc
@@ -3603,7 +3491,7 @@ register.cpython-310.pyc
 sdist.cpython-310.pyc
 upload.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools/_distutils/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/_distutils/__pycache__:
 archive_util.cpython-310.pyc
 bcppcompiler.cpython-310.pyc
 ccompiler.cpython-310.pyc
@@ -3635,14 +3523,14 @@ util.cpython-310.pyc
 version.cpython-310.pyc
 versionpredicate.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools/extern:
+./venv/lib/python3.10/site-packages/setuptools/extern:
 __init__.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/setuptools/extern/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/extern/__pycache__:
 __init__.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/__pycache__:
 archive_util.cpython-310.pyc
 build_meta.cpython-310.pyc
 config.cpython-310.pyc
@@ -3668,7 +3556,7 @@ version.cpython-310.pyc
 wheel.cpython-310.pyc
 windows_support.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools/_vendor:
+./venv/lib/python3.10/site-packages/setuptools/_vendor:
 __init__.py
 more_itertools
 ordered_set.py
@@ -3676,18 +3564,18 @@ packaging
 __pycache__
 pyparsing.py
 
-./env/venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools:
+./venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools:
 __init__.py
 more.py
 __pycache__
 recipes.py
 
-./env/venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools/__pycache__:
 __init__.cpython-310.pyc
 more.cpython-310.pyc
 recipes.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging:
+./venv/lib/python3.10/site-packages/setuptools/_vendor/packaging:
 __about__.py
 __init__.py
 _manylinux.py
@@ -3701,7 +3589,7 @@ tags.py
 utils.py
 version.py
 
-./env/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/__pycache__:
 __about__.cpython-310.pyc
 __init__.cpython-310.pyc
 _manylinux.cpython-310.pyc
@@ -3714,12 +3602,12 @@ tags.cpython-310.pyc
 utils.cpython-310.pyc
 version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools/_vendor/__pycache__:
+./venv/lib/python3.10/site-packages/setuptools/_vendor/__pycache__:
 __init__.cpython-310.pyc
 ordered_set.cpython-310.pyc
 pyparsing.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info:
+./venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info:
 entry_points.txt
 INSTALLER
 LICENSE
@@ -3729,7 +3617,7 @@ REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/sniffio:
+./venv/lib/python3.10/site-packages/sniffio:
 _impl.py
 __init__.py
 __pycache__
@@ -3737,52 +3625,54 @@ py.typed
 _tests
 _version.py
 
-./env/venv/lib/python3.10/site-packages/sniffio/__pycache__:
+./venv/lib/python3.10/site-packages/sniffio/__pycache__:
 _impl.cpython-310.pyc
 __init__.cpython-310.pyc
 _version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/sniffio/_tests:
+./venv/lib/python3.10/site-packages/sniffio/_tests:
 __init__.py
 __pycache__
 test_sniffio.py
 
-./env/venv/lib/python3.10/site-packages/sniffio/_tests/__pycache__:
+./venv/lib/python3.10/site-packages/sniffio/_tests/__pycache__:
 __init__.cpython-310.pyc
 test_sniffio.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/sniffio-1.3.1.dist-info:
+./venv/lib/python3.10/site-packages/sniffio-1.3.1.dist-info:
 INSTALLER
 LICENSE
 LICENSE.APACHE2
 LICENSE.MIT
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/sortedcontainers:
+./venv/lib/python3.10/site-packages/sortedcontainers:
 __init__.py
 __pycache__
 sorteddict.py
 sortedlist.py
 sortedset.py
 
-./env/venv/lib/python3.10/site-packages/sortedcontainers/__pycache__:
+./venv/lib/python3.10/site-packages/sortedcontainers/__pycache__:
 __init__.cpython-310.pyc
 sorteddict.cpython-310.pyc
 sortedlist.cpython-310.pyc
 sortedset.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/sortedcontainers-2.4.0.dist-info:
+./venv/lib/python3.10/site-packages/sortedcontainers-2.4.0.dist-info:
 INSTALLER
 LICENSE
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/trio:
+./venv/lib/python3.10/site-packages/trio:
 _abc.py
 abc.py
 _channel.py
@@ -3824,7 +3714,7 @@ _version.py
 _wait_for_object.py
 _windows_pipes.py
 
-./env/venv/lib/python3.10/site-packages/trio/_core:
+./venv/lib/python3.10/site-packages/trio/_core:
 _asyncgens.py
 _concat_tb.py
 _entry_queue.py
@@ -3855,7 +3745,7 @@ _unbounded_queue.py
 _wakeup_socketpair.py
 _windows_cffi.py
 
-./env/venv/lib/python3.10/site-packages/trio/_core/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_core/__pycache__:
 _asyncgens.cpython-310.pyc
 _concat_tb.cpython-310.pyc
 _entry_queue.cpython-310.pyc
@@ -3884,7 +3774,7 @@ _unbounded_queue.cpython-310.pyc
 _wakeup_socketpair.cpython-310.pyc
 _windows_cffi.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/_core/_tests:
+./venv/lib/python3.10/site-packages/trio/_core/_tests:
 __init__.py
 __pycache__
 test_asyncgen.py
@@ -3905,7 +3795,7 @@ test_windows.py
 tutil.py
 type_tests
 
-./env/venv/lib/python3.10/site-packages/trio/_core/_tests/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_core/_tests/__pycache__:
 __init__.cpython-310.pyc
 test_asyncgen.cpython-310.pyc
 test_cancelled.cpython-310.pyc
@@ -3924,16 +3814,16 @@ test_unbounded_queue.cpython-310.pyc
 test_windows.cpython-310.pyc
 tutil.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/_core/_tests/type_tests:
+./venv/lib/python3.10/site-packages/trio/_core/_tests/type_tests:
 nursery_start.py
 __pycache__
 run.py
 
-./env/venv/lib/python3.10/site-packages/trio/_core/_tests/type_tests/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_core/_tests/type_tests/__pycache__:
 nursery_start.cpython-310.pyc
 run.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/__pycache__:
+./venv/lib/python3.10/site-packages/trio/__pycache__:
 _abc.cpython-310.pyc
 abc.cpython-310.pyc
 _channel.cpython-310.pyc
@@ -3968,20 +3858,20 @@ _version.cpython-310.pyc
 _wait_for_object.cpython-310.pyc
 _windows_pipes.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/_subprocess_platform:
+./venv/lib/python3.10/site-packages/trio/_subprocess_platform:
 __init__.py
 kqueue.py
 __pycache__
 waitid.py
 windows.py
 
-./env/venv/lib/python3.10/site-packages/trio/_subprocess_platform/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_subprocess_platform/__pycache__:
 __init__.cpython-310.pyc
 kqueue.cpython-310.pyc
 waitid.cpython-310.pyc
 windows.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/testing:
+./venv/lib/python3.10/site-packages/trio/testing:
 _checkpoints.py
 _check_streams.py
 _fake_net.py
@@ -3993,7 +3883,7 @@ _raises_group.py
 _sequencer.py
 _trio_test.py
 
-./env/venv/lib/python3.10/site-packages/trio/testing/__pycache__:
+./venv/lib/python3.10/site-packages/trio/testing/__pycache__:
 _checkpoints.cpython-310.pyc
 _check_streams.cpython-310.pyc
 _fake_net.cpython-310.pyc
@@ -4004,7 +3894,7 @@ _raises_group.cpython-310.pyc
 _sequencer.cpython-310.pyc
 _trio_test.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/_tests:
+./venv/lib/python3.10/site-packages/trio/_tests:
 astrill-codesigning-cert.cer
 check_type_completeness.py
 __init__.py
@@ -4048,7 +3938,7 @@ test_windows_pipes.py
 tools
 type_tests
 
-./env/venv/lib/python3.10/site-packages/trio/_tests/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_tests/__pycache__:
 check_type_completeness.cpython-310.pyc
 __init__.cpython-310.pyc
 module_with_deprecations.cpython-310.pyc
@@ -4088,20 +3978,20 @@ test_util.cpython-310.pyc
 test_wait_for_object.cpython-310.pyc
 test_windows_pipes.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/_tests/tools:
+./venv/lib/python3.10/site-packages/trio/_tests/tools:
 __init__.py
 __pycache__
 test_gen_exports.py
 test_mypy_annotate.py
 test_sync_requirements.py
 
-./env/venv/lib/python3.10/site-packages/trio/_tests/tools/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_tests/tools/__pycache__:
 __init__.cpython-310.pyc
 test_gen_exports.cpython-310.pyc
 test_mypy_annotate.cpython-310.pyc
 test_sync_requirements.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/_tests/type_tests:
+./venv/lib/python3.10/site-packages/trio/_tests/type_tests:
 check_wraps.py
 open_memory_channel.py
 path.py
@@ -4110,7 +4000,7 @@ raisesgroup.py
 subprocesses.py
 task_status.py
 
-./env/venv/lib/python3.10/site-packages/trio/_tests/type_tests/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_tests/type_tests/__pycache__:
 check_wraps.cpython-310.pyc
 open_memory_channel.cpython-310.pyc
 path.cpython-310.pyc
@@ -4118,7 +4008,7 @@ raisesgroup.cpython-310.pyc
 subprocesses.cpython-310.pyc
 task_status.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio/_tools:
+./venv/lib/python3.10/site-packages/trio/_tools:
 gen_exports.py
 __init__.py
 mypy_annotate.py
@@ -4126,58 +4016,61 @@ __pycache__
 sync_requirements.py
 windows_ffi_build.py
 
-./env/venv/lib/python3.10/site-packages/trio/_tools/__pycache__:
+./venv/lib/python3.10/site-packages/trio/_tools/__pycache__:
 gen_exports.cpython-310.pyc
 __init__.cpython-310.pyc
 mypy_annotate.cpython-310.pyc
 sync_requirements.cpython-310.pyc
 windows_ffi_build.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio-0.32.0.dist-info:
+./venv/lib/python3.10/site-packages/trio-0.32.0.dist-info:
 entry_points.txt
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/trio-0.32.0.dist-info/licenses:
+./venv/lib/python3.10/site-packages/trio-0.32.0.dist-info/licenses:
 LICENSE
 LICENSE.APACHE2
 LICENSE.MIT
 
-./env/venv/lib/python3.10/site-packages/trio_websocket:
+./venv/lib/python3.10/site-packages/trio_websocket:
 _impl.py
 __init__.py
 __pycache__
 py.typed
 _version.py
 
-./env/venv/lib/python3.10/site-packages/trio_websocket/__pycache__:
+./venv/lib/python3.10/site-packages/trio_websocket/__pycache__:
 _impl.cpython-310.pyc
 __init__.cpython-310.pyc
 _version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/trio_websocket-0.12.2.dist-info:
+./venv/lib/python3.10/site-packages/trio_websocket-0.12.2.dist-info:
 INSTALLER
 LICENSE
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/typing_extensions-4.15.0.dist-info:
+./venv/lib/python3.10/site-packages/typing_extensions-4.15.0.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/typing_extensions-4.15.0.dist-info/licenses:
+./venv/lib/python3.10/site-packages/typing_extensions-4.15.0.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/urllib3:
+./venv/lib/python3.10/site-packages/urllib3:
 _base_connection.py
 _collections.py
 connectionpool.py
@@ -4196,14 +4089,14 @@ response.py
 util
 _version.py
 
-./env/venv/lib/python3.10/site-packages/urllib3/contrib:
+./venv/lib/python3.10/site-packages/urllib3/contrib:
 emscripten
 __init__.py
 __pycache__
 pyopenssl.py
 socks.py
 
-./env/venv/lib/python3.10/site-packages/urllib3/contrib/emscripten:
+./venv/lib/python3.10/site-packages/urllib3/contrib/emscripten:
 connection.py
 emscripten_fetch_worker.js
 fetch.py
@@ -4212,30 +4105,30 @@ __pycache__
 request.py
 response.py
 
-./env/venv/lib/python3.10/site-packages/urllib3/contrib/emscripten/__pycache__:
+./venv/lib/python3.10/site-packages/urllib3/contrib/emscripten/__pycache__:
 connection.cpython-310.pyc
 fetch.cpython-310.pyc
 __init__.cpython-310.pyc
 request.cpython-310.pyc
 response.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/urllib3/contrib/__pycache__:
+./venv/lib/python3.10/site-packages/urllib3/contrib/__pycache__:
 __init__.cpython-310.pyc
 pyopenssl.cpython-310.pyc
 socks.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/urllib3/http2:
+./venv/lib/python3.10/site-packages/urllib3/http2:
 connection.py
 __init__.py
 probe.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/urllib3/http2/__pycache__:
+./venv/lib/python3.10/site-packages/urllib3/http2/__pycache__:
 connection.cpython-310.pyc
 __init__.cpython-310.pyc
 probe.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/urllib3/__pycache__:
+./venv/lib/python3.10/site-packages/urllib3/__pycache__:
 _base_connection.cpython-310.pyc
 _collections.cpython-310.pyc
 connection.cpython-310.pyc
@@ -4249,7 +4142,7 @@ _request_methods.cpython-310.pyc
 response.cpython-310.pyc
 _version.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/urllib3/util:
+./venv/lib/python3.10/site-packages/urllib3/util:
 connection.py
 __init__.py
 proxy.py
@@ -4265,7 +4158,7 @@ url.py
 util.py
 wait.py
 
-./env/venv/lib/python3.10/site-packages/urllib3/util/__pycache__:
+./venv/lib/python3.10/site-packages/urllib3/util/__pycache__:
 connection.cpython-310.pyc
 __init__.cpython-310.pyc
 proxy.cpython-310.pyc
@@ -4280,17 +4173,18 @@ url.cpython-310.pyc
 util.cpython-310.pyc
 wait.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/urllib3-2.6.3.dist-info:
+./venv/lib/python3.10/site-packages/urllib3-2.6.3.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/urllib3-2.6.3.dist-info/licenses:
+./venv/lib/python3.10/site-packages/urllib3-2.6.3.dist-info/licenses:
 LICENSE.txt
 
-./env/venv/lib/python3.10/site-packages/webdriver_manager:
+./venv/lib/python3.10/site-packages/webdriver_manager:
 chrome.py
 core
 drivers
@@ -4301,7 +4195,7 @@ opera.py
 __pycache__
 py.typed
 
-./env/venv/lib/python3.10/site-packages/webdriver_manager/core:
+./venv/lib/python3.10/site-packages/webdriver_manager/core:
 archive.py
 config.py
 constants.py
@@ -4317,7 +4211,7 @@ os_manager.py
 __pycache__
 utils.py
 
-./env/venv/lib/python3.10/site-packages/webdriver_manager/core/__pycache__:
+./venv/lib/python3.10/site-packages/webdriver_manager/core/__pycache__:
 archive.cpython-310.pyc
 config.cpython-310.pyc
 constants.cpython-310.pyc
@@ -4332,7 +4226,7 @@ manager.cpython-310.pyc
 os_manager.cpython-310.pyc
 utils.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/webdriver_manager/drivers:
+./venv/lib/python3.10/site-packages/webdriver_manager/drivers:
 chrome.py
 edge.py
 firefox.py
@@ -4341,7 +4235,7 @@ __init__.py
 opera.py
 __pycache__
 
-./env/venv/lib/python3.10/site-packages/webdriver_manager/drivers/__pycache__:
+./venv/lib/python3.10/site-packages/webdriver_manager/drivers/__pycache__:
 chrome.cpython-310.pyc
 edge.cpython-310.pyc
 firefox.cpython-310.pyc
@@ -4349,14 +4243,14 @@ ie.cpython-310.pyc
 __init__.cpython-310.pyc
 opera.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/webdriver_manager/__pycache__:
+./venv/lib/python3.10/site-packages/webdriver_manager/__pycache__:
 chrome.cpython-310.pyc
 firefox.cpython-310.pyc
 __init__.cpython-310.pyc
 microsoft.cpython-310.pyc
 opera.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/webdriver_manager-4.0.2.dist-info:
+./venv/lib/python3.10/site-packages/webdriver_manager-4.0.2.dist-info:
 INSTALLER
 LICENSE
 METADATA
@@ -4365,7 +4259,7 @@ REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/websocket:
+./venv/lib/python3.10/site-packages/websocket:
 _abnf.py
 _app.py
 _cookiejar.py
@@ -4385,7 +4279,7 @@ _url.py
 _utils.py
 _wsdump.py
 
-./env/venv/lib/python3.10/site-packages/websocket/__pycache__:
+./venv/lib/python3.10/site-packages/websocket/__pycache__:
 _abnf.cpython-310.pyc
 _app.cpython-310.pyc
 _cookiejar.cpython-310.pyc
@@ -4402,7 +4296,7 @@ _url.cpython-310.pyc
 _utils.cpython-310.pyc
 _wsdump.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/websocket/tests:
+./venv/lib/python3.10/site-packages/websocket/tests:
 data
 echo-server.py
 __init__.py
@@ -4422,12 +4316,12 @@ test_url.py
 test_utils.py
 test_websocket.py
 
-./env/venv/lib/python3.10/site-packages/websocket/tests/data:
+./venv/lib/python3.10/site-packages/websocket/tests/data:
 header01.txt
 header02.txt
 header03.txt
 
-./env/venv/lib/python3.10/site-packages/websocket/tests/__pycache__:
+./venv/lib/python3.10/site-packages/websocket/tests/__pycache__:
 echo-server.cpython-310.pyc
 __init__.cpython-310.pyc
 test_abnf.cpython-310.pyc
@@ -4445,19 +4339,20 @@ test_url.cpython-310.pyc
 test_utils.cpython-310.pyc
 test_websocket.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/websocket_client-1.9.0.dist-info:
+./venv/lib/python3.10/site-packages/websocket_client-1.9.0.dist-info:
 entry_points.txt
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/websocket_client-1.9.0.dist-info/licenses:
+./venv/lib/python3.10/site-packages/websocket_client-1.9.0.dist-info/licenses:
 LICENSE
 
-./env/venv/lib/python3.10/site-packages/werkzeug:
+./venv/lib/python3.10/site-packages/werkzeug:
 datastructures
 debug
 exceptions.py
@@ -4482,7 +4377,7 @@ utils.py
 wrappers
 wsgi.py
 
-./env/venv/lib/python3.10/site-packages/werkzeug/datastructures:
+./venv/lib/python3.10/site-packages/werkzeug/datastructures:
 accept.py
 auth.py
 cache_control.py
@@ -4496,7 +4391,7 @@ __pycache__
 range.py
 structures.py
 
-./env/venv/lib/python3.10/site-packages/werkzeug/datastructures/__pycache__:
+./venv/lib/python3.10/site-packages/werkzeug/datastructures/__pycache__:
 accept.cpython-310.pyc
 auth.cpython-310.pyc
 cache_control.cpython-310.pyc
@@ -4509,7 +4404,7 @@ mixins.cpython-310.pyc
 range.cpython-310.pyc
 structures.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/werkzeug/debug:
+./venv/lib/python3.10/site-packages/werkzeug/debug:
 console.py
 __init__.py
 __pycache__
@@ -4517,13 +4412,13 @@ repr.py
 shared
 tbtools.py
 
-./env/venv/lib/python3.10/site-packages/werkzeug/debug/__pycache__:
+./venv/lib/python3.10/site-packages/werkzeug/debug/__pycache__:
 console.cpython-310.pyc
 __init__.cpython-310.pyc
 repr.cpython-310.pyc
 tbtools.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/werkzeug/debug/shared:
+./venv/lib/python3.10/site-packages/werkzeug/debug/shared:
 console.png
 debugger.js
 ICON_LICENSE.md
@@ -4531,7 +4426,7 @@ less.png
 more.png
 style.css
 
-./env/venv/lib/python3.10/site-packages/werkzeug/middleware:
+./venv/lib/python3.10/site-packages/werkzeug/middleware:
 dispatcher.py
 http_proxy.py
 __init__.py
@@ -4541,7 +4436,7 @@ proxy_fix.py
 __pycache__
 shared_data.py
 
-./env/venv/lib/python3.10/site-packages/werkzeug/middleware/__pycache__:
+./venv/lib/python3.10/site-packages/werkzeug/middleware/__pycache__:
 dispatcher.cpython-310.pyc
 http_proxy.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -4550,7 +4445,7 @@ profiler.cpython-310.pyc
 proxy_fix.cpython-310.pyc
 shared_data.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/werkzeug/__pycache__:
+./venv/lib/python3.10/site-packages/werkzeug/__pycache__:
 exceptions.cpython-310.pyc
 formparser.cpython-310.pyc
 http.cpython-310.pyc
@@ -4567,7 +4462,7 @@ user_agent.cpython-310.pyc
 utils.cpython-310.pyc
 wsgi.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/werkzeug/routing:
+./venv/lib/python3.10/site-packages/werkzeug/routing:
 converters.py
 exceptions.py
 __init__.py
@@ -4576,7 +4471,7 @@ matcher.py
 __pycache__
 rules.py
 
-./env/venv/lib/python3.10/site-packages/werkzeug/routing/__pycache__:
+./venv/lib/python3.10/site-packages/werkzeug/routing/__pycache__:
 converters.cpython-310.pyc
 exceptions.cpython-310.pyc
 __init__.cpython-310.pyc
@@ -4584,7 +4479,7 @@ map.cpython-310.pyc
 matcher.cpython-310.pyc
 rules.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/werkzeug/sansio:
+./venv/lib/python3.10/site-packages/werkzeug/sansio:
 http.py
 __init__.py
 multipart.py
@@ -4593,7 +4488,7 @@ request.py
 response.py
 utils.py
 
-./env/venv/lib/python3.10/site-packages/werkzeug/sansio/__pycache__:
+./venv/lib/python3.10/site-packages/werkzeug/sansio/__pycache__:
 http.cpython-310.pyc
 __init__.cpython-310.pyc
 multipart.cpython-310.pyc
@@ -4601,28 +4496,29 @@ request.cpython-310.pyc
 response.cpython-310.pyc
 utils.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/werkzeug/wrappers:
+./venv/lib/python3.10/site-packages/werkzeug/wrappers:
 __init__.py
 __pycache__
 request.py
 response.py
 
-./env/venv/lib/python3.10/site-packages/werkzeug/wrappers/__pycache__:
+./venv/lib/python3.10/site-packages/werkzeug/wrappers/__pycache__:
 __init__.cpython-310.pyc
 request.cpython-310.pyc
 response.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/werkzeug-3.1.5.dist-info:
+./venv/lib/python3.10/site-packages/werkzeug-3.1.5.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/werkzeug-3.1.5.dist-info/licenses:
+./venv/lib/python3.10/site-packages/werkzeug-3.1.5.dist-info/licenses:
 LICENSE.txt
 
-./env/venv/lib/python3.10/site-packages/wsproto:
+./venv/lib/python3.10/site-packages/wsproto:
 connection.py
 events.py
 extensions.py
@@ -4634,7 +4530,7 @@ py.typed
 typing.py
 utilities.py
 
-./env/venv/lib/python3.10/site-packages/wsproto/__pycache__:
+./venv/lib/python3.10/site-packages/wsproto/__pycache__:
 connection.cpython-310.pyc
 events.cpython-310.pyc
 extensions.cpython-310.pyc
@@ -4644,36 +4540,24 @@ __init__.cpython-310.pyc
 typing.cpython-310.pyc
 utilities.cpython-310.pyc
 
-./env/venv/lib/python3.10/site-packages/wsproto-1.3.2.dist-info:
+./venv/lib/python3.10/site-packages/wsproto-1.3.2.dist-info:
 INSTALLER
 licenses
 METADATA
 RECORD
+REQUESTED
 top_level.txt
 WHEEL
 
-./env/venv/lib/python3.10/site-packages/wsproto-1.3.2.dist-info/licenses:
+./venv/lib/python3.10/site-packages/wsproto-1.3.2.dist-info/licenses:
 LICENSE
-
-./robô:
-coletar_status.py
-config.py
-__pycache__
-
-./robô/__pycache__:
-coletar_status.cpython-310.pyc
 
 ./webapp:
 app.py
-logs
 requirements.txt
 run.sh
 static
 templates
-
-./webapp/logs:
-flask.log
-selenium.log
 
 ./webapp/static:
 css
@@ -4685,6 +4569,8 @@ style.css
 
 ./webapp/static/img:
 atlanta-logo.png
+painel-solar.ico
+solar.ico
 
 ./webapp/static/js:
 main.js
