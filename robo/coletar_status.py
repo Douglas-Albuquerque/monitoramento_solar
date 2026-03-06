@@ -164,6 +164,30 @@ def salvar_status(nome_usina: str, status: str):
     conn.close()
 
 
+def salvar_status_historico(
+    nome_usina: str, status: str, origem: str = None, mensagem: str = None
+):
+    """
+    Salva uma linha de histórico sempre que o status mudar.
+    """
+    conn = get_db_connection()
+    cur = conn.cursor()
+    agora = datetime.now()
+
+    cur.execute(
+        """
+        INSERT INTO usinas_status_historico
+            (nome_usina, status, changed_at, origem, mensagem)
+        VALUES (%s, %s, %s, %s, %s)
+        """,
+        (nome_usina, status, agora, origem, mensagem),
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 GROWATT_API_BASE = "https://openapi.growatt.com/v1"
 
 
@@ -610,20 +634,31 @@ def main():
 
         if cfg.get("tipo") == "growatt_api":
             status_novo = checar_usina_growatt_api(cfg)
+            origem = "growatt_api"
         elif cfg.get("usa_cookies"):
             status_novo = checar_usina_cookies(cfg)
+            origem = "cookies"
         else:
             status_novo = checar_usina(cfg)
+            origem = "selenium"
 
         status_antigo = obter_status_anterior(nome)
+
         salvar_status(nome, status_novo)
         logger.info(f"{nome}: {status_novo} (antes: {status_antigo})")
 
-        if status_novo in ("OFFLINE", "ERRO") and status_novo != status_antigo:
-            msg = (
-                f"[ALERTA] {nome} em estado crítico "
-                f"({status_antigo} -> {status_novo}). Enviando WhatsApp..."
+        # Se mudou de status, registra no histórico
+        if status_novo != status_antigo:
+            salvar_status_historico(
+                nome_usina=nome,
+                status=status_novo,
+                origem=origem,
+                mensagem=None,  # se quiser depois podemos passar um resumo da causa
             )
+
+        # Alerta só quando entra em crítico
+        if status_novo in ("OFFLINE", "ERRO") and status_novo != status_antigo:
+            msg = f"[ALERTA] {nome} em estado crítico: {status_antigo} -> {status_novo}. Enviando WhatsApp..."
             logger.warning(msg)
             enviar_whatsapp_alerta(nome, status_novo, status_antigo, responsavel)
 
