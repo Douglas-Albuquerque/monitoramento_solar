@@ -3,20 +3,47 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Relatório Mensal de Paradas</title>
+    <title>Relatório Mensal - Sistema de Paradas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/grafico-de-barras.ico') }}">
     <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-image: radial-gradient(circle at center, #3F6FB5 0%, #1F3F6E 50%, #122440 100%);
+            color: #f8f9fa;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
         .btn-grad {
             background-image: linear-gradient(135deg, #28a745, #20c997);
             border: none;
             font-weight: bold;
             color: #fff;
-            padding: 0.5rem 5rem;
+            padding: 0.5rem 1.5rem;
             font-size: 0.95rem;
         }
 
         .btn-grad:hover {
             filter: brightness(1.1);
+        }
+
+        .card-main {
+            background: rgba(0, 0, 0, 0.65);
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        .card-main h2,
+        .card-main h3 {
+            color: #fff;
+        }
+
+        .card-header-title {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
         }
 
         .table-dark,
@@ -26,56 +53,70 @@
     </style>
 </head>
 
-<body style="
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  background-image: radial-gradient(circle at center, #3F6FB5 0%, #1F3F6E 50%, #122440 100%);
-  color: #f8f9fa;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-">
+<body>
     <div class="container py-4">
-        <div class="d-flex justify-content-center align-items-center">
-            <!-- Esquerda: logo -->
+
+        <!-- topo com logo e navegação -->
+        <div class="d-flex justify-content-center align-items-center mb-4">
             <div class="d-flex align-items-center">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo"
-                    style="height: 100px; margin-bottom: 15px;">
+                <a href="{{ url_for('home') }}">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo"
+                        style="height: 100px; margin-bottom: 15px;">
+                </a>
             </div>
             <div class="text-center flex-grow-1" style="margin-left: 4rem;">
-                <h1 class="h3 mb-0 text-white">Paradas mensais</h1>
+                <h1 class="h3 mb-0 text-white">Relatório Mensal de Paradas</h1>
+                <div class="text-white-50" style="font-size: 0.9rem;">
+                    Resumo e detalhes das paradas registradas
+                </div>
             </div>
             <div class="d-flex align-items-center justify-content-end" style="min-width: 260px;">
-                <!-- <span class="me-3 text-white">Usuário: {{ usuario }}</span> -->
-                <a href="{{ url_for('home') }}" class="btn btn-outline-light btn-sm me-2">
-                    Home
-                </a>
-                <a href="{{ url_for('paradas') }}" class="btn btn-outline-light btn-sm me-2">
-                    Paradas
-                </a>
-                <a href="{{ url_for('motivos') }}" class="btn btn-outline-light btn-sm me-2">
-                    Cadastro
-                </a>
-                <a href="{{ url_for('relatorio_reincidencia') }}" class="btn btn-outline-light btn-sm me-2">
-                    Reincidências
-                </a>
+                <a href="{{ url_for('home') }}" class="btn btn-outline-light btn-sm me-2">Home</a>
+                <a href="{{ url_for('paradas') }}" class="btn btn-outline-light btn-sm me-2">Paradas</a>
+                <a href="{{ url_for('motivos') }}" class="btn btn-outline-light btn-sm me-2">Cadastro</a>
+                <a href="{{ url_for('relatorio_reincidencia') }}"
+                    class="btn btn-outline-light btn-sm me-2">Reincidências</a>
                 <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Sair</a>
             </div>
         </div>
 
-        <div class="card mb-4" style="background: rgba(0,0,0,0.65); border: none;">
+        <!-- toasts -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="toast align-items-center text-white 
+                      {% if category == 'success' %}bg-success
+                      {% elif category == 'danger' %}bg-danger
+                      {% elif category == 'warning' %}bg-warning text-dark
+                      {% else %}bg-secondary{% endif %}
+                      border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Filtros -->
+        <div class="card card-main mb-4">
             <div class="card-body">
-                <h2 class="h5 mb-3 text-white">Filtros</h2>
+                <h2 class="h5 mb-3">Filtros</h2>
                 <form class="row g-2 align-items-end" method="get">
                     <div class="col-6 col-md-2">
                         <label class="form-label text-white">Ano</label>
                         <input type="number" name="ano" class="form-control" value="{{ ano }}">
                     </div>
-
                     <div class="col-6 col-md-2">
                         <label class="form-label text-white">Mês</label>
                         <input type="number" name="mes" class="form-control" value="{{ mes }}" min="1" max="12">
                     </div>
-
                     <div class="col-12 col-md-6">
                         <label class="form-label text-white">Usina</label>
                         <select name="usina" class="form-select">
@@ -85,22 +126,22 @@
                             {% endfor %}
                         </select>
                     </div>
-
                     <div class="col-12 col-md-2 text-md-end">
-                        <button type="submit" class="btn btn-grad mt-3 mt-md-0">
+                        <button type="submit" class="btn btn-grad w-100 mt-2 mt-md-0">
                             Gerar
                         </button>
                     </div>
                 </form>
-
+                <p class="mt-2 mb-0 text-white-50">
+                    Janela analisada: {{ inicio_mes.strftime("%d/%m/%Y") }} até {{ fim_mes.strftime("%d/%m/%Y") }}.
+                </p>
             </div>
         </div>
 
-        <div class="card" style="background: rgba(0,0,0,0.65); border: none;">
+        <!-- Resumo por usina/motivo -->
+        <div class="card card-main mb-4">
             <div class="card-body">
-                <h2 class="h5 mb-3 text-white">
-                    Resultado - {{ "%02d"|format(mes) }}/{{ ano }}
-                </h2>
+                <h2 class="h5 mb-3">Resumo por usina e motivo</h2>
 
                 {% if linhas %}
                 <div class="table-responsive">
@@ -109,33 +150,165 @@
                             <tr>
                                 <th>Usina</th>
                                 <th>Motivo</th>
-                                <th class="text-center">Qtd. paradas</th>
-                                <th class="text-center">Total parado</th>
-                                <th class="text-center">Total parado</th>
+                                <th>Qtd. paradas</th>
+                                <th>Total parado</th>
+                                <th>Total parado</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for l in linhas %}
-                            {% set horas = (l.minutos_total or 0) / 60 %}
+                            {% set horas = l.minutos_total / 60 %}
                             <tr>
-                                <td class="text-white">{{ l.nome_usina }}</td>
-                                <td class="text-white">{{ l.motivo }}</td>
-                                <td class="text-white text-center">{{ l.qtde_paradas }}</td>
-                                <td class="text-white text-center">{{ l.minutos_total }} min</td>
-                                <td class="text-white text-center">{{ "%.2f"|format(horas) }} h</td>
+                                <td>{{ l.nome_usina }}</td>
+                                <td>{{ l.motivo }}</td>
+                                <td>{{ l.qtde_paradas }}</td>
+                                <td>{{ "%.0f"|format(l.minutos_total) }} min</td>
+                                <td>{{ "%.2f"|format(horas) }} h</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 {% else %}
-                <p class="mb-0 text-white">
-                    Nenhuma parada registrada para os filtros selecionados.
-                </p>
+                <p class="text-white-50 mb-0">Nenhuma parada registrada para os filtros selecionados.</p>
                 {% endif %}
             </div>
         </div>
+
+        <!-- Paradas detalhadas para edição -->
+        <div class="card card-main mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Paradas detalhadas</h2>
+
+                {% if paradas_detalhe %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-dark align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Usina</th>
+                                <th>Início</th>
+                                <th>Fim</th>
+                                <th>Motivo</th>
+                                <th>Observação</th>
+                                <th style="width: 120px;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in paradas_detalhe %}
+                            <tr>
+                                <td>{{ p.nome_usina }}</td>
+                                <td>{{ p.inicio.strftime("%d/%m/%Y %H:%M") }}</td>
+                                <td>{{ p.fim.strftime("%d/%m/%Y %H:%M") }}</td>
+                                <td>{{ p.motivo }}</td>
+                                <td>{{ p.observacao or "" }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#editarParadaModal" data-id="{{ p.id }}"
+                                        data-usina="{{ p.nome_usina }}"
+                                        data-inicio="{{ p.inicio.strftime('%d/%m/%Y %H:%M') }}"
+                                        data-fim="{{ p.fim.strftime('%d/%m/%Y %H:%M') }}"
+                                        data-motivo-id="{{ p.motivo_id }}" data-observacao="{{ p.observacao or '' }}">
+                                        Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-white-50 mb-0">Nenhuma parada registrada no período.</p>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
+
+    <!-- Modal Editar Parada -->
+    <div class="modal fade" id="editarParadaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #122440; color: #f8f9fa;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar parada</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Fechar"></button>
+                </div>
+                <form method="post" action="{{ url_for('editar_parada') }}">
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="editParadaId">
+
+                        <div class="mb-2">
+                            <label class="form-label">Usina</label>
+                            <input type="text" class="form-control" id="editParadaUsina" disabled>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Início</label>
+                            <input type="text" class="form-control" id="editParadaInicio" disabled>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Fim</label>
+                            <input type="text" class="form-control" id="editParadaFim" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Motivo</label>
+                            <select class="form-select" name="motivo_id" id="editParadaMotivoId" required>
+                                {% for m in motivos_todos %}
+                                <option value="{{ m.id }}">{{ m.descricao }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Observação</label>
+                            <textarea class="form-control" name="observacao" id="editParadaObservacao"
+                                rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-grad">Salvar alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // toasts
+        document.addEventListener('DOMContentLoaded', function () {
+            const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            toastElList.forEach(function (toastEl) {
+                const t = new bootstrap.Toast(toastEl);
+                t.show();
+            });
+        });
+
+        // modal editar parada
+        const editarParadaModal = document.getElementById('editarParadaModal');
+        if (editarParadaModal) {
+            editarParadaModal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const usina = button.getAttribute('data-usina');
+                const inicio = button.getAttribute('data-inicio');
+                const fim = button.getAttribute('data-fim');
+                const motivoId = button.getAttribute('data-motivo-id');
+                const observacao = button.getAttribute('data-observacao');
+
+                document.getElementById('editParadaId').value = id;
+                document.getElementById('editParadaUsina').value = usina;
+                document.getElementById('editParadaInicio').value = inicio;
+                document.getElementById('editParadaFim').value = fim;
+                document.getElementById('editParadaMotivoId').value = motivoId;
+                document.getElementById('editParadaObservacao').value = observacao;
+            });
+        }
+    </script>
 </body>
 
 </html>

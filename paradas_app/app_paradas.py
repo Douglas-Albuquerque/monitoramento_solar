@@ -248,20 +248,26 @@ def relatorio_mensal():
     cur.execute("SELECT DISTINCT nome_usina FROM paradas_usinas ORDER BY nome_usina")
     usinas = [row["nome_usina"] for row in cur.fetchall()]
 
+    # motivos para o select do modal
+    cur.execute(
+        "SELECT id, descricao FROM motivos_parada WHERE ativo = 1 ORDER BY descricao"
+    )
+    motivos = cur.fetchall()
+
     params = [data_inicio, data_fim]
     where_usina = ""
     if usina_sel:
         where_usina = "AND p.nome_usina = %s"
         params.append(usina_sel)
 
-    # soma de duração por usina e motivo
+    # RESUMO por usina/motivo
     cur.execute(
         f"""
         SELECT
-            p.nome_usina,
-            m.descricao AS motivo,
-            SUM(TIMESTAMPDIFF(MINUTE, p.inicio, p.fim)) AS minutos_total,
-            COUNT(*) AS qtde_paradas
+          p.nome_usina,
+          m.descricao AS motivo,
+          SUM(TIMESTAMPDIFF(MINUTE, p.inicio, p.fim)) AS minutos_total,
+          COUNT(*) AS qtde_paradas
         FROM paradas_usinas p
         JOIN motivos_parada m ON m.id = p.motivo_id
         WHERE p.inicio BETWEEN %s AND %s
@@ -272,6 +278,28 @@ def relatorio_mensal():
         params,
     )
     linhas = cur.fetchall()
+
+    # DETALHES por parada (para edição)
+    cur.execute(
+        f"""
+        SELECT
+          p.id,
+          p.nome_usina,
+          p.inicio,
+          p.fim,
+          m.descricao AS motivo,
+          p.motivo_id,
+          p.observacao
+        FROM paradas_usinas p
+        JOIN motivos_parada m ON m.id = p.motivo_id
+        WHERE p.inicio BETWEEN %s AND %s
+          {where_usina}
+        ORDER BY p.nome_usina, p.inicio
+        """,
+        params,
+    )
+    paradas_detalhe = cur.fetchall()
+
     cur.close()
     conn.close()
 
@@ -283,6 +311,47 @@ def relatorio_mensal():
         usinas=usinas,
         usina_sel=usina_sel,
         linhas=linhas,
+        paradas_detalhe=paradas_detalhe,
+        inicio_mes=data_inicio,
+        fim_mes=data_fim,
+        motivos_todos=motivos,
+    )
+
+
+@app.route("/paradas/editar", methods=["POST"])
+@login_required
+def editar_parada():
+    parada_id = request.form.get("id")
+    motivo_id = request.form.get("motivo_id")
+    observacao = request.form.get("observacao", "").strip()
+
+    if not parada_id or not motivo_id:
+        flash("Dados incompletos para editar a parada.", "danger")
+        return redirect(url_for("relatorio_mensal"))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        UPDATE paradas_usinas
+        SET motivo_id = %s,
+            observacao = %s
+        WHERE id = %s
+        """,
+        (int(motivo_id), observacao or None, int(parada_id)),
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    flash("Parada atualizada com sucesso.", "success")
+    return redirect(
+        url_for(
+            "relatorio_mensal",
+            ano=request.args.get("ano"),
+            mes=request.args.get("mes"),
+            usina=request.args.get("usina"),
+        )
     )
 
 
@@ -594,7 +663,6 @@ def paradas():
         return redirect(
             url_for(
                 "paradas",
-                usina=nome_usina,
                 data_inicio=request.args.get("data_inicio"),
                 data_fim=request.args.get("data_fim"),
             )
