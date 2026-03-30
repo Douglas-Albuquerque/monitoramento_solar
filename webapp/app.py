@@ -72,6 +72,23 @@ def get_db_connection():
         password=os.getenv("DB_PASS"),
         database=os.getenv("DB_NAME", "solar_monitor"),
     )
+    
+def get_placas_usina(nome_usina: str):
+    conn = get_db_connection()
+    cur = conn.cursor(dictionary=True)
+    cur.execute(
+        """
+        SELECT codigo_placa, status, updated_at
+        FROM placas_status
+        WHERE nome_usina = %s
+        ORDER BY codigo_placa
+        """,
+        (nome_usina,),
+    )
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return rows
 
 
 def get_status_usinas():
@@ -122,6 +139,12 @@ def dashboard():
         u["descricao"] = extra.get("descricao", "")
         u["maps_url"] = extra.get("maps_url", "")
     # Verificar cookies Solarman
+    
+        if nome == "UFV CASA 4":
+            u["placas"] = get_placas_usina(nome)  # TODAS as placas
+        else:
+            u["placas"] = []
+    
     cookies_info = verificar_expiracao_cookies_web()
 
     return render_template("index.html", usinas=usinas, cookies_info=cookies_info)

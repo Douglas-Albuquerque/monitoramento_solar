@@ -125,7 +125,6 @@ def get_db_connection():
 
 
 def obter_status_anterior(nome_usina: str) -> str:
-    """Busca o último status salvo para a usina (ou None)."""
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
@@ -143,11 +142,9 @@ def obter_status_anterior(nome_usina: str) -> str:
 
 
 def salvar_status(nome_usina: str, status: str):
-    """Insere ou atualiza status da usina na tabela usinas_status."""
     conn = get_db_connection()
     cur = conn.cursor()
     agora = datetime.now()
-
     cur.execute(
         """
         INSERT INTO usinas_status (nome_usina, status, updated_at)
@@ -158,11 +155,27 @@ def salvar_status(nome_usina: str, status: str):
         """,
         (nome_usina, status, agora),
     )
-
     conn.commit()
     cur.close()
     conn.close()
 
+def salvar_status_placa(nome_usina: str, codigo_placa: str, status: str):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    agora = datetime.now()
+    cur.execute(
+        """
+        INSERT INTO placas_status (nome_usina, codigo_placa, status, updated_at)
+        VALUES (%s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            status = VALUES(status),
+            updated_at = VALUES(updated_at)
+        """,
+        (nome_usina, codigo_placa, status, agora),
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
 
 def salvar_status_historico(
     nome_usina: str, status: str, origem: str = None, mensagem: str = None
@@ -553,6 +566,194 @@ def checar_usina_cookies(cfg: dict) -> str:
 
     return status_final
 
+def checar_ufv_casa4_detalhado(cfg: dict) -> dict:
+    """
+    UFV CASA 4 (Solarman) com detalhe por placa.
+
+    Retorna:
+      {
+        "status_geral": "ONLINE" | "OFFLINE" | "ERRO",
+        "placas": [
+            {"codigo": "4139773808", "status": "ONLINE"},
+            ...
+        ]
+      }
+    """
+    import pickle, json as json_mod, time
+
+    driver = criar_driver()
+    nome = cfg["nome"]
+    status_geral = "ERRO"
+    placas: list[dict] = []
+
+    cookie_path = os.path.join(os.path.dirname(__file__), "..", cfg["cookie_file"])
+
+    try:
+        msg = f"[{nome}] (detalhado) 1. Carregando cookies..."
+        logger.info(msg)
+
+        if not os.path.exists(cookie_path):
+            msg = f"[{nome}] ERRO: {cookie_path} não encontrado!"
+            logger.error(msg)
+            return {"status_geral": "ERRO", "placas": []}
+
+        driver.get(cfg["url_dashboard"])
+        time.sleep(2)
+
+        # aplica cookies
+        if cfg["cookie_file"].endswith(".pkl"):
+            with open(cookie_path, "rb") as f:
+                cookies = pickle.load(f)
+        else:
+            with open(cookie_path, "r", encoding="utf-8") as f:
+                cookies = json_mod.load(f)
+
+        for cookie in cookies:
+            try:
+                c = cookie.copy()
+                c.pop("sameSite", None)
+                driver.add_cookie(c)
+            except Exception:
+                pass
+
+        msg = f"[{nome}] (detalhado) 2. Cookies carregados, acessando dashboard..."
+        logger.info(msg)
+        driver.refresh()
+        time.sleep(8)
+
+        wait = WebDriverWait(driver, 30)
+
+        # 3) Clicar em "Informações do dispositivo"
+        try:
+            msg = f"[{nome}] (detalhado) 3.1 Verificando se há modal aberto..."
+            logger.info(msg)
+            modal_close_btn = driver.find_element(
+                By.XPATH,
+                "//div[contains(@class,'ant-modal-wrap')]"
+                "//button[contains(@class,'ant-modal-close')]"
+                " | "
+                "//div[contains(@class,'ant-modal-wrap')]"
+                "//button[normalize-space(.)='Fechar' or normalize-space(.)='OK']"
+            )
+            modal_close_btn.click()
+            time.sleep(2)
+            logger.info(f"[{nome}] (detalhado) Modal fechado.")
+        except Exception:
+            logger.info(f"[{nome}] (detalhado) Nenhum modal para fechar.")
+
+        # 4) Clicar em "Informações do dispositivo"
+        msg = f"[{nome}] (detalhado) 3. Clicando em 'Informações do dispositivo'..."
+        logger.info(msg)
+        menu_dispositivo = wait.until(
+            EC.element_to_be_clickable(
+                (
+                    By.XPATH,
+                    "//div[contains(@class, 'items') "
+                    "and contains(., 'Informações') "
+                    "and contains(., 'dispositivo')]",
+                )
+            )
+        )
+        driver.execute_script("arguments[0].click();", menu_dispositivo)
+        time.sleep(5)
+
+        # 4) Ler tabela de "Nome do dispositivo"
+        # cada tr -> td -> 2 spans: 1) 'Logger', 2) código (4139773808, etc)
+        linhas_nome = wait.until(
+            EC.presence_of_all_elements_located(
+                (
+                    By.XPATH,
+                    "//div[contains(@class,'table-title-col') "
+                    "and contains(., 'Nome') "
+                    "and contains(., 'dispositivo')]"
+                    "/ancestor::div/following-sibling::div"
+                    "//table/tbody/tr",
+                )
+            )
+        )
+
+        codigos: list[str] = []
+        for tr in linhas_nome:
+            try:
+                spans = tr.find_elements(By.XPATH, ".//td//span")
+                if len(spans) >= 2:
+                    codigo = (spans[1].text or "").strip()
+                    if codigo:
+                        codigos.append(codigo)
+            except Exception:
+                continue
+
+        msg = f"[{nome}] (detalhado) Codigos lidos: {codigos}"
+        logger.info(msg)
+
+        # 5) Ler tabela de "Status do dispositivo"
+        # cada tr -> primeiro td = texto do status ("Conectados", etc)
+        linhas_status = wait.until(
+            EC.presence_of_all_elements_located(
+                (
+                    By.XPATH,
+                    "//div[contains(@class,'table-title-col') "
+                    "and contains(., 'Status do dispositivo')]"
+                    "/ancestor::div/following-sibling::div"
+                    "//table/tbody/tr",
+                )
+            )
+        )
+
+        # garantir que usamos só a mesma quantidade de códigos
+        n = min(len(codigos), len(linhas_status))
+        status_list: list[str] = []
+        for i in range(n):
+            tr = linhas_status[i]
+            try:
+                td_status = tr.find_element(By.XPATH, ".//td[1]")
+                texto = (td_status.text or "").strip().lower()
+                status_list.append(texto)
+            except Exception:
+                status_list.append("erro")
+
+
+        msg = f"[{nome}] (detalhado) Status lidos: {status_list}"
+        logger.info(msg)
+
+        # 6) Montar lista de placas combinando por índice
+        n = min(len(codigos), len(status_list))
+        for i in range(n):
+            codigo = codigos[i]
+            texto_status = status_list[i]
+
+            if "conectado" in texto_status:   # "Conectados"
+                st = "ONLINE"
+            elif "desconectado" in texto_status or "offline" in texto_status:
+                st = "OFFLINE"
+            else:
+                st = "ERRO"
+
+            placas.append({"codigo": codigo, "status": st})
+
+        if not placas:
+            # fallback: usa status geral via cookies como hoje
+            msg = f"[{nome}] (detalhado) Nenhuma placa lida, usando status genérico..."
+            logger.warning(msg)
+            status_geral = checar_usina_cookies(cfg)
+        else:
+            if any(p["status"] == "OFFLINE" for p in placas):
+                status_geral = "OFFLINE"
+            elif all(p["status"] == "ONLINE" for p in placas):
+                status_geral = "ONLINE"
+            else:
+                status_geral = "ERRO"
+
+    except Exception as e:
+        msg = f"[{nome}] (detalhado) ERRO: {e}"
+        logger.error(msg)
+        status_geral = "ERRO"
+    finally:
+        driver.quit()
+
+    return {"status_geral": status_geral, "placas": placas}
+
+
 
 def verificar_expiracao_cookies(cookie_file: str, dias_aviso: int = 5) -> dict:
     """
@@ -611,6 +812,7 @@ def main():
 
     cookies_verificados = set()
 
+    # 1) Avisos de expiração de cookies
     for cfg in USINAS:
         if cfg.get("usa_cookies") and cfg["cookie_file"] not in cookies_verificados:
             cookies_verificados.add(cfg["cookie_file"])
@@ -624,14 +826,96 @@ def main():
                         f"({info.get('expira_em')}). Renove antes para evitar falhas!"
                     )
                 else:
-                    msg = f"URGENTE: Cookies de {cfg['nome']} expiraram ou estão inválidos!"
+                    msg = (
+                        f"URGENTE: Cookies de {cfg['nome']} "
+                        f"expiraram ou estão inválidos!"
+                    )
                 logger.warning(msg)
 
+    # 2) Coleta de status
+    def main():
+        logger.info("=== Iniciando coleta de status das usinas ===")
+
+    cookies_verificados = set()
+
+    # 1) Avisos de expiração de cookies
+    for cfg in USINAS:
+        if cfg.get("usa_cookies") and cfg["cookie_file"] not in cookies_verificados:
+            cookies_verificados.add(cfg["cookie_file"])
+            info = verificar_expiracao_cookies(cfg["cookie_file"])
+
+            if info.get("precisa_renovar"):
+                dias = info.get("expira_em_dias", 0)
+                if dias > 0:
+                    msg = (
+                        f"AVISO: Cookies de {cfg['nome']} expiram em {dias} dias "
+                        f"({info.get('expira_em')}). Renove antes para evitar falhas!"
+                    )
+                else:
+                    msg = (
+                        f"URGENTE: Cookies de {cfg['nome']} "
+                        f"expiraram ou estão inválidos!"
+                    )
+                logger.warning(msg)
+
+    # 2) Coleta de status
     for cfg in USINAS:
         nome = cfg["nome"]
         responsavel = cfg.get("responsavel", "")
         logger.info(f"-> Checando {nome} ...")
 
+        # CASO ESPECIAL: UFV CASA 4 com detalhe por placa
+        if nome == "UFV CASA 4":
+            info = checar_ufv_casa4_detalhado(cfg)
+            status_geral = info["status_geral"]
+            placas = info["placas"]
+            origem = "solarman_detalhado"
+
+            # status geral da usina (tabela usinas_status)
+            status_antigo_geral = obter_status_anterior(nome)
+            salvar_status(nome, status_geral)
+            logger.info(f"{nome}: {status_geral} (antes: {status_antigo_geral})")
+
+            if status_geral != status_antigo_geral:
+                salvar_status_historico(
+                    nome_usina=nome,
+                    status=status_geral,
+                    origem=origem,
+                    mensagem=None,
+                )
+
+            # salvar por placa (tabela placas_status)
+            for p in placas:
+                cod = p["codigo"]
+                st = p["status"]
+                salvar_status_placa(nome, cod, st)
+                logger.info(f"{nome} - {cod}: {st}")
+
+                # histórico por placa (mantendo sua tabela de histórico atual)
+                salvar_status_historico(
+                    nome_usina=nome,
+                    status=st,
+                    origem=origem,
+                    mensagem=f"Placa {cod}",
+                )
+
+            # alerta geral (mantém regra atual)
+            if (
+                status_geral in ("OFFLINE", "ERRO")
+                and status_geral != status_antigo_geral
+            ):
+                msg = (
+                    f"[ALERTA] {nome} em estado crítico: "
+                    f"{status_antigo_geral} -> {status_geral}. Enviando WhatsApp..."
+                )
+                logger.warning(msg)
+                enviar_whatsapp_alerta(
+                    nome, status_geral, status_antigo_geral, responsavel
+                )
+
+            continue  # vai para a próxima usina
+
+        # DEMAIS USINAS: fluxo antigo
         if cfg.get("tipo") == "growatt_api":
             status_novo = checar_usina_growatt_api(cfg)
             origem = "growatt_api"
@@ -653,12 +937,15 @@ def main():
                 nome_usina=nome,
                 status=status_novo,
                 origem=origem,
-                mensagem=None,  # se quiser depois podemos passar um resumo da causa
+                mensagem=None,
             )
 
         # Alerta só quando entra em crítico
         if status_novo in ("OFFLINE", "ERRO") and status_novo != status_antigo:
-            msg = f"[ALERTA] {nome} em estado crítico: {status_antigo} -> {status_novo}. Enviando WhatsApp..."
+            msg = (
+                f"[ALERTA] {nome} em estado crítico: "
+                f"{status_antigo} -> {status_novo}. Enviando WhatsApp..."
+            )
             logger.warning(msg)
             enviar_whatsapp_alerta(nome, status_novo, status_antigo, responsavel)
 

@@ -135,13 +135,95 @@ def intervalo_ja_registrado(nome_usina, inicio, fim):
 
 def obter_intervalos_parada(nome_usina, data_inicio, data_fim):
     """
-    Lê o histórico da usina no período e devolve intervalos de parada
+    Lê o histórico no período e devolve intervalos de parada
     (OFFLINE/ERRO) já recortados para dentro do horário de sol (06:00–18:00),
     ignorando intervalos que já tenham uma parada registrada.
+
+    CASO ESPECIAL:
+      - Para 'UFV CASA 4', usa o campo mensagem='Placa X' para sugerir paradas
+        por placa, com nome_usina = 'UFV CASA 4 - <codigo_placa>'.
     """
     conn = get_db_connection()
     cur = conn.cursor(dictionary=True)
 
+    intervalos = []
+
+    # Caso especial: UFV CASA 4 por placa
+    if nome_usina == "UFV CASA 4":
+        cur.execute(
+            """
+            SELECT nome_usina, status, changed_at, mensagem
+            FROM usinas_status_historico
+            WHERE nome_usina = %s
+              AND changed_at BETWEEN %s AND %s
+              AND mensagem LIKE 'Placa %%'
+            ORDER BY changed_at
+            """,
+            (nome_usina, data_inicio, data_fim),
+        )
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        # agrupa por código de placa extraído de mensagem ("Placa 4139...")
+        por_placa = {}
+        for row in rows:
+            msg = row.get("mensagem") or ""
+            partes = msg.split()
+            codigo = partes[1] if len(partes) >= 2 else None
+            if not codigo:
+                continue
+            if codigo not in por_placa:
+                por_placa[codigo] = []
+            por_placa[codigo].append(
+                {
+                    "status": row["status"],
+                    "changed_at": row["changed_at"],
+                }
+            )
+
+        for codigo, rows_placa in por_placa.items():
+            rows_placa.sort(key=lambda r: r["changed_at"])
+            em_parada = False
+            inicio_parada = None
+            nome_parada = f"{nome_usina} - {codigo}"
+
+            def adiciona_intervalo_bruto_placa(inicio, fim):
+                intervalo_aj = recortar_para_horario_sol(inicio, fim)
+                if intervalo_aj is None:
+                    return
+                if intervalo_ja_registrado(
+                    nome_parada, intervalo_aj["inicio"], intervalo_aj["fim"]
+                ):
+                    return
+                intervalos.append(
+                    {
+                        "nome_usina": nome_parada,
+                        "inicio": intervalo_aj["inicio"],
+                        "fim": intervalo_aj["fim"],
+                    }
+                )
+
+            for r in rows_placa:
+                status = r["status"]
+                ts = r["changed_at"]
+
+                if not em_parada and status in ("OFFLINE", "ERRO"):
+                    em_parada = True
+                    inicio_parada = ts
+                elif em_parada and status == "ONLINE":
+                    fim_parada = ts
+                    adiciona_intervalo_bruto_placa(inicio_parada, fim_parada)
+                    em_parada = False
+                    inicio_parada = None
+
+            # mesma regra do seu código original:
+            # se ainda está em OFFLINE/ERRO e não voltou, não sugere (parada em andamento)
+            # então não fechamos com data_fim aqui
+
+        return intervalos
+
+    # Caso padrão (todas as outras usinas) - mesma lógica que você já tinha
     cur.execute(
         """
         SELECT nome_usina, status, changed_at
@@ -156,7 +238,6 @@ def obter_intervalos_parada(nome_usina, data_inicio, data_fim):
     cur.close()
     conn.close()
 
-    intervalos = []
     em_parada = False
     inicio_parada = None
 
@@ -169,7 +250,13 @@ def obter_intervalos_parada(nome_usina, data_inicio, data_fim):
             nome_usina, intervalo_aj["inicio"], intervalo_aj["fim"]
         ):
             return
-        intervalos.append(intervalo_aj)
+        intervalos.append(
+            {
+                "nome_usina": nome_usina,
+                "inicio": intervalo_aj["inicio"],
+                "fim": intervalo_aj["fim"],
+            }
+        )
 
     for row in rows:
         status = row["status"]
@@ -186,13 +273,6 @@ def obter_intervalos_parada(nome_usina, data_inicio, data_fim):
 
     # NÃO fecha paradas abertas; se ainda está em OFFLINE/ERRO e não voltou,
     # consideramos que a parada está em andamento e não mostramos na tela.
-    # if em_parada and inicio_parada is not None:
-    #     adiciona_intervalo_bruto(inicio_parada, data_fim)
-
-    return intervalos
-
-    if em_parada and inicio_parada is not None:
-        adiciona_intervalo_bruto(inicio_parada, data_fim)
 
     return intervalos
 
@@ -577,7 +657,6 @@ def home():
 
 from datetime import datetime, timedelta
 
-
 from datetime import (
     datetime,
     timedelta,
@@ -614,7 +693,7 @@ def paradas():
     conn = get_db_connection()
     cur = conn.cursor(dictionary=True)
 
-    # Usinas distintas
+    # Usinas distintas (histórico geral)
     cur.execute(
         "SELECT DISTINCT nome_usina FROM usinas_status_historico ORDER BY nome_usina"
     )
@@ -702,13 +781,11 @@ def paradas():
         # só uma usina
         intervalos = obter_intervalos_parada(usina_sel, data_inicio, data_fim)
     else:
-        # todas as usinas: concatenar intervalos com o nome
+        # todas as usinas: concatenar intervalos
         for u in usinas:
             ints = obter_intervalos_parada(u, data_inicio, data_fim)
-            for i in ints:
-                i["nome_usina"] = u
-                intervalos.append(i)
-        # opcional: ordenar por início
+            intervalos.extend(ints)
+        # ordenar por início
         intervalos.sort(key=lambda x: x["inicio"])
 
     return render_template(

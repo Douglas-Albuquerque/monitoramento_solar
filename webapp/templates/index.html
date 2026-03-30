@@ -37,9 +37,7 @@
             font-weight: 700;
             margin-right: 14rem;
             text-align: center;
-            /* ← ADICIONAR */
             width: 100%;
-            /* ← ADICIONAR */
             white-space: nowrap;
         }
 
@@ -50,9 +48,11 @@
             color: #fff;
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
             transition: transform .2s ease, box-shadow .2s ease;
-            min-height: 180px;
+            min-height: 260px;
+            /* antes era 180px */
             position: relative;
-            /* ~3x o que era antes */
+            display: flex;
+            align-items: stretch;
         }
 
         .card-usina:hover {
@@ -63,23 +63,16 @@
         .btn-monitor-link {
             position: absolute;
             top: 12px;
-            /* ajuste vertical conforme o layout */
             right: 16px;
-            /* encosta no lado direito do card */
             display: inline-flex;
             align-items: center;
             justify-content: center;
-
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            /* deixa redondo; remova se não quiser */
             background-color: #ffffff33;
-            /* cor de fundo (semi-transparente) */
             border: 1px solid #ffffff66;
-            /* opcional */
             color: #fff;
-            /* cor do ícone */
             cursor: pointer;
             text-decoration: none;
             transition: background-color 0.2s ease, transform 0.1s ease;
@@ -87,7 +80,6 @@
 
         .btn-monitor-link:hover {
             background-color: #ffffff66;
-            /* cor de hover */
             transform: scale(1.05);
         }
 
@@ -132,43 +124,43 @@
             border: 1px solid #dc3545;
         }
 
+        @media (min-width: 992px) {
+            .card-usina {
+                height: 260px;
+                /* ajuste fino aqui */
+            }
+        }
+
         @media (max-width: 768px) {
 
-            /* Logo menor */
             .top-bar img.logo {
                 height: 50px;
             }
 
-            /* Título menor */
             .titulo-dashboard {
                 font-size: 1.6rem !important;
                 white-space: nowrap;
             }
 
-            /* Cards em 1 coluna, tamanho reduzido */
             .card-usina {
                 min-height: 140px;
                 padding: 20px;
             }
 
-            /* Status text menor */
             .status-text {
                 font-size: 1.2rem;
             }
 
-            /* Badge de cookies menor */
             .alert {
                 font-size: 0.85rem;
                 padding: 10px 15px;
             }
 
-            /* Espaçamento do container */
             .container {
                 padding-left: 15px;
                 padding-right: 15px;
             }
 
-            /* Top bar compacto */
             .top-bar {
                 margin-bottom: 24px;
             }
@@ -176,7 +168,6 @@
 
         @media (max-width: 480px) {
 
-            /* Extra small (iPhone SE, etc) */
             .logo {
                 height: 40px !important;
             }
@@ -210,8 +201,9 @@
     <div class="container py-4 py-md-5">
         <!-- Topo: Logo + Título -->
         <div class="top-bar text-center">
-            <a href="http://10.254.2.210:5001/login" target="_blank"><img
-                    src="{{ url_for('static', filename='img/atlanta-logo.png') }}" alt="Atlanta" class="logo mb-2"></a>
+            <a href="http://10.254.2.200:5001/login" target="_blank">
+                <img src="{{ url_for('static', filename='img/atlanta-logo.png') }}" alt="Atlanta" class="logo mb-2">
+            </a>
             <h1 class="titulo-dashboard">Usinas Solares</h1>
         </div>
 
@@ -221,36 +213,68 @@
             {% set cls = 'online' if u.status == 'ONLINE' else ('offline' if u.status == 'OFFLINE' else 'erro') %}
             <div class="col-12 col-md-6">
                 <div class="card-usina {{ cls }}">
-                    <h4 class="mb-3">{{ u.nome_usina }}</h4>
-                    {% if u.maps_url %}
-                    <a href="{{ u.maps_url }}" target="_blank"
-                        class="text-decoration-none text-white d-inline-flex align-items-center mb-1">
-                        <span class="me-2">{{ u.descricao }}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                            class="bi bi-map" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z" />
-                        </svg>
-                    </a>
-                    {% else %}
-                    <p class="mb-1 text-white">
-                        {{ u.descricao }}
-                    </p>
-                    {% endif %}
-                    <p class="status-text mb-2">
-                        {% if u.status == 'ONLINE' %}
-                        🟢 Online
-                        {% elif u.status == 'OFFLINE' %}
-                        🔴 Offline
-                        {% else %}
-                        ⚠️ Erro
-                        {% endif %}
-                    </p>
+                    <div class="w-100">
+                        <div class="row">
+                            <!-- COLUNA ESQUERDA: infos gerais -->
+                            <div class="col-12 col-lg-6">
+                                <h4 class="mb-3">{{ u.nome_usina }}</h4>
 
-                    <small class="d-block mb-3">
-                        Última atualização:<br>
-                        {{ u.updated_at.strftime('%d/%m/%Y %H:%M:%S') if u.updated_at }}
-                    </small>
+                                {% if u.maps_url %}
+                                <a href="{{ u.maps_url }}" target="_blank"
+                                    class="text-decoration-none text-white d-inline-flex align-items-center mb-1">
+                                    <span class="me-2">{{ u.descricao }}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                                        class="bi bi-map" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z" />
+                                    </svg>
+                                </a>
+                                {% else %}
+                                <p class="mb-1 text-white">
+                                    {{ u.descricao }}
+                                </p>
+                                {% endif %}
+
+                                <p class="status-text mb-2">
+                                    {% if u.status == 'ONLINE' %}
+                                    🟢 Online
+                                    {% elif u.status == 'OFFLINE' %}
+                                    🔴 Offline
+                                    {% else %}
+                                    ⚠️ Erro
+                                    {% endif %}
+                                </p>
+
+                                <small class="d-block mb-3">
+                                    Última atualização:<br>
+                                    {{ u.updated_at.strftime('%d/%m/%Y %H:%M:%S') if u.updated_at }}
+                                </small>
+                            </div>
+
+                            <!-- COLUNA DIREITA: subcard de placas -->
+                            <div class="col-12 col-lg-6 d-flex align-items-stretch">
+                                {% if u.nome_usina == 'UFV CASA 4' and u.placas %}
+                                <div class="bg-dark bg-opacity-25 rounded-3 p-2 ms-lg-3 me-lg-4 w-100">
+                                    <div class="fw-semibold mb-2" style="font-size: 0.9rem;">
+                                        Placas individuais
+                                    </div>
+                                    {% for placa in u.placas %}
+                                    <div class="d-flex align-items-center mb-1" style="font-size: 0.85rem;">
+                                        {% if placa.status == 'ONLINE' %}
+                                        <span class="me-2" style="font-size: 1rem;">🟢</span>
+                                        {% elif placa.status == 'OFFLINE' %}
+                                        <span class="me-2" style="font-size: 1rem;">🔴</span>
+                                        {% else %}
+                                        <span class="me-2" style="font-size: 1rem;">⚠️</span>
+                                        {% endif %}
+                                        <span>{{ placa.codigo_placa }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
 
                     {% if u.url_monitor %}
                     <a href="{{ u.url_monitor }}" target="_blank" class="btn-monitor-link">
@@ -260,6 +284,7 @@
                                 d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
                             <path
                                 d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
+                        </svg>
                     </a>
                     {% endif %}
                 </div>
@@ -272,7 +297,6 @@
             </div>
             {% endfor %}
         </div>
-
 
         <!-- Badge de cookies -->
         {% if cookies_info %}
